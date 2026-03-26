@@ -18,14 +18,18 @@ export default function LoginPage() {
     const formData = new FormData(e.currentTarget)
 
     startTransition(async () => {
+      console.log('[v0] Login attempt started')
       const result = await loginAction(formData)
+      console.log('[v0] Login result:', result)
       if (result.error) {
         setError(result.error)
       } else {
+        console.log('[v0] Login successful, refreshing and redirecting')
         router.refresh()
-        setTimeout(() => {
-          router.replace('/admin')
-        }, 100)
+        // Wait for refresh to complete before redirecting
+        await new Promise(resolve => setTimeout(resolve, 200))
+        console.log('[v0] Redirecting to /admin')
+        router.replace('/admin')
       }
     })
   }

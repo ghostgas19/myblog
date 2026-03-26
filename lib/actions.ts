@@ -149,5 +149,11 @@ export async function logoutAction() {
 export async function getSession() {
   const cookieStore = await cookies();
   const session = cookieStore.get(SESSION_COOKIE_NAME);
+  console.log("[v0] getSession check:", {
+    cookieExists: !!session,
+    cookieValue: session?.value,
+    expectedValue: SESSION_TOKEN,
+    isValid: session?.value === SESSION_TOKEN,
+  });
   return session?.value === SESSION_TOKEN;
 }

@@ -1,13 +1,5 @@
-import { redirect } from 'next/navigation'
-import { getSession } from '@/lib/actions'
-
-export default async function LoginLayout({ children }: { children: React.ReactNode }) {
-  const isAuthenticated = await getSession()
-
-  // If already logged in, redirect to admin dashboard
-  if (isAuthenticated) {
-    redirect('/admin')
-  }
-
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
+  // Simply render the login page without any session checks
+  // The login page itself will handle the form submission and redirect
   return <>{children}</>
 }
