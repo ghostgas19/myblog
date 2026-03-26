@@ -1,7 +1,7 @@
 import type { Post } from "./types";
-import { list, put } from "@vercel/blob";
+import { supabase } from "./supabase-server";
 
-// ---- Default seed data (digunakan saat pertama kali atau fallback) ----
+// ---- Default seed data (dipakai saat pertama kali DB masih kosong) ----
 
 const defaultCategories: string[] = [
   "Refleksi",
@@ -12,7 +12,7 @@ const defaultCategories: string[] = [
   "Harian",
 ];
 
-// Seed posts – akan disalin ke Blob saat pertama kali
+// Seed posts – akan dimasukkan ke database saat pertama kali
 const defaultPosts: Post[] = [
   {
     id: "1",
@@ -152,223 +152,283 @@ Dan ketika foto-foto itu akhirnya muncul — dengan segala ketidaksempurnaannya,
   },
 ];
 
-// ---- Vercel Blob-backed storage ----
+// ---- Helper: seed awal ke Supabase kalau tabel masih kosong ----
 
-type BlogState = {
-  categories: string[];
-  posts: Post[];
-};
+async function ensureSeeded() {
+  // Cek apakah sudah ada post di DB
+  const { data, error } = await supabase
+    .from("posts")
+    .select("id")
+    .limit(1);
 
-const DATA_BLOB_KEY = "blog-data.json";
-
-// Digunakan sebagai fallback in-memory ketika Vercel Blob belum dikonfigurasi
-let memoryState: BlogState | null = null;
-
-// Blob dianggap "aktif" hanya kalau BLOB_READ_WRITE_TOKEN diset.
-// Artinya: kamu wajib set env ini baik di lokal maupun di Vercel
-// supaya data benar-benar tersimpan di Vercel Blob.
-const blobEnabled = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
-
-async function readFromBlob(): Promise<BlogState | null> {
-  try {
-    const { blobs } = await list({ prefix: DATA_BLOB_KEY, limit: 1 });
-    const file = blobs.find((b) => b.pathname === DATA_BLOB_KEY);
-    if (!file) return null;
-
-    const res = await fetch(file.url, { cache: "no-store" });
-    if (!res.ok) return null;
-
-    const json = (await res.json()) as Partial<BlogState>;
-    if (!Array.isArray(json.posts) || !Array.isArray(json.categories)) {
-      return null;
-    }
-
-    return {
-      categories: json.categories,
-      posts: json.posts,
-    };
-  } catch (error) {
-    console.error("Failed to read blog data from Vercel Blob:", error);
-    return null;
-  }
-}
-
-async function writeToBlob(state: BlogState): Promise<void> {
-  if (!blobEnabled) {
-    // Di dev lokal tanpa konfigurasi Blob, kita skip supaya tidak error
+  if (error) {
+    console.error("Supabase getPosts (seed check) error:", error);
     return;
   }
 
-  try {
-    await put(DATA_BLOB_KEY, JSON.stringify(state, null, 2), {
-      // Store kamu saat ini public, jadi akses juga harus public
-      access: "public",
-      contentType: "application/json",
-    });
-  } catch (error) {
-    console.error("Failed to write blog data to Vercel Blob:", error);
-  }
-}
+  if (data && data.length > 0) return;
 
-async function loadState(): Promise<BlogState> {
-  // Jika Blob belum dikonfigurasi (mis. lokal tanpa token), gunakan state in-memory
-  if (!blobEnabled) {
-    if (!memoryState) {
-      memoryState = {
-        categories: [...defaultCategories],
-        posts: [...defaultPosts],
-      };
-    }
-    return memoryState;
+  // Seed categories
+  const categoryRows = defaultCategories.map((name) => ({ name }));
+  const { error: catError } = await supabase
+    .from("categories")
+    .upsert(categoryRows, { onConflict: "name" });
+  if (catError) {
+    console.error("Supabase seed categories error:", catError);
   }
 
-  const fromBlob = await readFromBlob();
-  if (fromBlob) return fromBlob;
+  // Seed posts
+  const postRows = defaultPosts.map((p) => ({
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    excerpt: p.excerpt,
+    content: p.content,
+    category: p.category,
+    status: p.status,
+    cover_emoji: p.coverEmoji,
+    cover_gradient: p.coverGradient,
+    banner_url: p.bannerUrl ?? null,
+    reading_time: p.readingTime,
+    created_at: p.createdAt,
+  }));
 
-  // Jika belum ada di Blob, gunakan seed dan coba tulis ke Blob
-  const seeded: BlogState = {
-    categories: [...defaultCategories],
-    posts: [...defaultPosts],
-  };
-
-  await writeToBlob(seeded);
-  return seeded;
-}
-
-async function withMutatedState(
-  mutator: (state: BlogState) => void,
-): Promise<BlogState> {
-  const state = await loadState();
-  mutator(state);
-
-  if (!blobEnabled) {
-    memoryState = state;
-    return state;
+  const { error: postError } = await supabase.from("posts").upsert(postRows, {
+    onConflict: "id",
+  });
+  if (postError) {
+    console.error("Supabase seed posts error:", postError);
   }
-
-  await writeToBlob(state);
-  return state;
 }
 
 // ---- Categories API ----
 
 export async function getCategories(): Promise<string[]> {
-  const state = await loadState();
-  return [...state.categories];
+  await ensureSeeded();
+
+  const { data, error } = await supabase
+    .from("categories")
+    .select("name")
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Supabase getCategories error:", error);
+    // fallback ke default kalau error parah
+    return [...defaultCategories];
+  }
+
+  return (data ?? []).map((row: { name: string }) => row.name);
 }
 
 export async function createCategory(name: string): Promise<string> {
   const normalized = name.trim();
   if (!normalized) return normalized;
 
-  let saved = normalized;
+  // Cek dulu apakah sudah ada (case-insensitive)
+  const { data: existing, error: selectError } = await supabase
+    .from("categories")
+    .select("name")
+    .ilike("name", normalized)
+    .maybeSingle();
 
-  await withMutatedState((state) => {
-    const existingIndex = state.categories
-      .map((c) => c.toLowerCase())
-      .indexOf(normalized.toLowerCase());
+  if (selectError && selectError.code !== "PGRST116") {
+    console.error("Supabase createCategory select error:", selectError);
+  }
 
-    if (existingIndex !== -1) {
-      saved = state.categories[existingIndex];
-      return;
-    }
+  if (existing?.name) {
+    return existing.name;
+  }
 
-    state.categories.push(normalized);
-  });
+  const { data, error } = await supabase
+    .from("categories")
+    .insert({ name: normalized })
+    .select("name")
+    .single();
 
-  return saved;
+  if (error) {
+    console.error("Supabase createCategory insert error:", error);
+    throw new Error("Gagal menyimpan kategori");
+  }
+
+  return data.name;
 }
 
 export async function deleteCategory(name: string): Promise<boolean> {
-  let deleted = false;
+  const { error, count } = await supabase
+    .from("categories")
+    .delete({ count: "exact" })
+    .ilike("name", name);
 
-  await withMutatedState((state) => {
-    const idx = state.categories.findIndex(
-      (c) => c.toLowerCase() === name.toLowerCase(),
-    );
-    if (idx === -1) return;
-    state.categories.splice(idx, 1);
-    deleted = true;
-  });
+  if (error) {
+    console.error("Supabase deleteCategory error:", error);
+    return false;
+  }
 
-  return deleted;
+  return (count ?? 0) > 0;
 }
 
 // ---- Posts API ----
 
+function mapRowToPost(row: any): Post {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    excerpt: row.excerpt,
+    content: row.content,
+    category: row.category,
+    status: row.status,
+    coverEmoji: row.cover_emoji,
+    coverGradient: row.cover_gradient,
+    bannerUrl: row.banner_url ?? undefined,
+    readingTime: row.reading_time,
+    createdAt: row.created_at,
+  };
+}
+
 export async function getPosts(): Promise<Post[]> {
-  const state = await loadState();
-  // Urutkan terbaru dulu berdasarkan createdAt
-  return [...state.posts].sort((a, b) =>
-    a.createdAt < b.createdAt ? 1 : -1,
-  );
+  await ensureSeeded();
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      "id, title, slug, excerpt, content, category, status, cover_emoji, cover_gradient, banner_url, reading_time, created_at",
+    )
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase getPosts error:", error);
+    return [];
+  }
+
+  return (data ?? []).map(mapRowToPost);
 }
 
 export async function getPublishedPosts(): Promise<Post[]> {
-  const posts = await getPosts();
-  return posts.filter((p) => p.status === "published");
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      "id, title, slug, excerpt, content, category, status, cover_emoji, cover_gradient, banner_url, reading_time, created_at",
+    )
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase getPublishedPosts error:", error);
+    return [];
+  }
+
+  return (data ?? []).map(mapRowToPost);
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-  const state = await loadState();
-  return state.posts.find((p) => p.slug === slug);
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      "id, title, slug, excerpt, content, category, status, cover_emoji, cover_gradient, banner_url, reading_time, created_at",
+    )
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error && error.code !== "PGRST116") {
+    console.error("Supabase getPostBySlug error:", error);
+    return undefined;
+  }
+
+  return data ? mapRowToPost(data) : undefined;
 }
 
 export async function getPostById(id: string): Promise<Post | undefined> {
-  const state = await loadState();
-  return state.posts.find((p) => p.id === id);
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      "id, title, slug, excerpt, content, category, status, cover_emoji, cover_gradient, banner_url, reading_time, created_at",
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error && error.code !== "PGRST116") {
+    console.error("Supabase getPostById error:", error);
+    return undefined;
+  }
+
+  return data ? mapRowToPost(data) : undefined;
 }
 
 export async function createPost(
   data: Omit<Post, "id" | "createdAt">,
 ): Promise<Post> {
-  let newPost: Post | null = null;
+  const id = String(Date.now());
+  const createdAt = new Date().toISOString();
 
-  await withMutatedState((state) => {
-    newPost = {
-      ...data,
-      id: String(Date.now()),
-      createdAt: new Date().toISOString(),
-    };
-    state.posts.push(newPost!);
-  });
+  const row = {
+    id,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt,
+    content: data.content,
+    category: data.category,
+    status: data.status,
+    cover_emoji: data.coverEmoji,
+    cover_gradient: data.coverGradient,
+    banner_url: data.bannerUrl ?? null,
+    reading_time: data.readingTime,
+    created_at: createdAt,
+  };
 
-  return newPost!;
+  const { error } = await supabase.from("posts").insert(row);
+  if (error) {
+    console.error("Supabase createPost error:", error);
+    throw new Error("Gagal menyimpan tulisan");
+  }
+
+  return { ...data, id, createdAt };
 }
 
 export async function updatePost(
   id: string,
   data: Partial<Omit<Post, "id" | "createdAt">>,
 ): Promise<Post | null> {
-  let updated: Post | null = null;
+  const patch: any = {};
+  if (data.title !== undefined) patch.title = data.title;
+  if (data.slug !== undefined) patch.slug = data.slug;
+  if (data.excerpt !== undefined) patch.excerpt = data.excerpt;
+  if (data.content !== undefined) patch.content = data.content;
+  if (data.category !== undefined) patch.category = data.category;
+  if (data.status !== undefined) patch.status = data.status;
+  if (data.coverEmoji !== undefined) patch.cover_emoji = data.coverEmoji;
+  if (data.coverGradient !== undefined)
+    patch.cover_gradient = data.coverGradient;
+  if (data.bannerUrl !== undefined) patch.banner_url = data.bannerUrl ?? null;
+  if (data.readingTime !== undefined) patch.reading_time = data.readingTime;
 
-  await withMutatedState((state) => {
-    const idx = state.posts.findIndex((p) => p.id === id);
-    if (idx === -1) return;
+  const { data: updated, error } = await supabase
+    .from("posts")
+    .update(patch)
+    .eq("id", id)
+    .select(
+      "id, title, slug, excerpt, content, category, status, cover_emoji, cover_gradient, banner_url, reading_time, created_at",
+    )
+    .maybeSingle();
 
-    const existing = state.posts[idx];
-    state.posts[idx] = {
-      ...existing,
-      ...data,
-      id: existing.id,
-      createdAt: existing.createdAt,
-    };
+  if (error) {
+    console.error("Supabase updatePost error:", error);
+    return null;
+  }
 
-    updated = state.posts[idx];
-  });
-
-  return updated;
+  return updated ? mapRowToPost(updated) : null;
 }
 
 export async function deletePost(id: string): Promise<boolean> {
-  let ok = false;
+  const { error, count } = await supabase
+    .from("posts")
+    .delete({ count: "exact" })
+    .eq("id", id);
 
-  await withMutatedState((state) => {
-    const idx = state.posts.findIndex((p) => p.id === id);
-    if (idx === -1) return;
-    state.posts.splice(idx, 1);
-    ok = true;
-  });
+  if (error) {
+    console.error("Supabase deletePost error:", error);
+    return false;
+  }
 
-  return ok;
+  return (count ?? 0) > 0;
 }

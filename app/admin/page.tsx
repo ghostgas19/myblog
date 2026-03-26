@@ -5,6 +5,8 @@ import { formatDate } from '@/lib/utils'
 import { DeletePostButton } from '@/components/admin/delete-post-button'
 import { PenSquare, Eye, FileText, CheckCircle, Clock, PenLine } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 async function StatsCards() {
   const posts = await getPosts()
   const published = posts.filter((p) => p.status === 'published').length
