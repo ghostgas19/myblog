@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
-import { loginAction } from '@/lib/actions'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { FilmStrip } from '@/components/film-strip'
 import { Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [pending, startTransition] = useTransition()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -18,11 +18,23 @@ export default function LoginPage() {
     const formData = new FormData(e.currentTarget)
 
     startTransition(async () => {
-      const result = await loginAction(formData)
-      if (result.error) {
-        setError(result.error)
-      } else {
-        router.push('/admin')
+      try {
+        const response = await fetch('/api/admin/login', {
+          method: 'POST',
+          body: formData,
+        })
+
+        const data = await response.json()
+
+        if (!response.ok || data.error) {
+          setError(data.error ?? 'Login gagal, coba lagi.')
+          return
+        }
+
+        const from = searchParams.get('from') || '/admin'
+        router.push(from)
+      } catch (err) {
+        setError('Terjadi kesalahan saat login.')
       }
     })
   }

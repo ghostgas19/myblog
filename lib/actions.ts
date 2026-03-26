@@ -125,3 +125,7 @@ export async function loginAction(formData: FormData) {
   }
   return { error: "Invalid credentials. Try admin@ruangcerita.id / password" };
 }
+
+export async function logoutAction() {
+  return { success: true };
+}
