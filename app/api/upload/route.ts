@@ -1,3 +1,4 @@
+import { put } from '@vercel/blob'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
@@ -23,9 +24,12 @@ export async function POST(request: NextRequest) {
     const ext = file.name.split('.').pop() || 'jpg'
     const filename = `blog-banner-${Date.now()}.${ext}`
 
-    // TODO: Implement file upload here (e.g. AWS S3, Cloudinary, Local storage)
-    // For now, return a placeholder URL or throw an error
-    return NextResponse.json({ url: `/placeholder.jpg`, error: 'Upload not implemented yet' })
+    // Upload to Vercel Blob
+    const blob = await put(filename, file, {
+      access: 'public', // Set to public for blog images
+    })
+
+    return NextResponse.json({ url: blob.url })
   } catch (error) {
     console.error('Upload error:', error)
     return NextResponse.json(
