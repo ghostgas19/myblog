@@ -164,6 +164,15 @@ const DATA_BLOB_KEY = "blog-data.json";
 // Digunakan sebagai fallback in-memory ketika Vercel Blob belum dikonfigurasi
 let memoryState: BlogState | null = null;
 
+// Blob dianggap "aktif" kalau:
+// - Di lokal: kamu set BLOB_READ_WRITE_TOKEN
+// - Di Vercel: process.env.VERCEL atau VERCEL_ENV otomatis ter-set
+const blobEnabled = Boolean(
+  process.env.BLOB_READ_WRITE_TOKEN ||
+    process.env.VERCEL ||
+    process.env.VERCEL_ENV,
+);
+
 async function readFromBlob(): Promise<BlogState | null> {
   try {
     const { blobs } = await list({ prefix: DATA_BLOB_KEY, limit: 1 });
@@ -189,7 +198,7 @@ async function readFromBlob(): Promise<BlogState | null> {
 }
 
 async function writeToBlob(state: BlogState): Promise<void> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  if (!blobEnabled) {
     // Di dev lokal tanpa konfigurasi Blob, kita skip supaya tidak error
     return;
   }
@@ -205,8 +214,8 @@ async function writeToBlob(state: BlogState): Promise<void> {
 }
 
 async function loadState(): Promise<BlogState> {
-  // Jika Blob belum dikonfigurasi, gunakan state in-memory
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  // Jika Blob belum dikonfigurasi (mis. lokal tanpa token), gunakan state in-memory
+  if (!blobEnabled) {
     if (!memoryState) {
       memoryState = {
         categories: [...defaultCategories],
@@ -235,7 +244,7 @@ async function withMutatedState(
   const state = await loadState();
   mutator(state);
 
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  if (!blobEnabled) {
     memoryState = state;
     return state;
   }
