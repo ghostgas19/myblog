@@ -1,9 +1,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import { getPosts } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
-import { getSession } from '@/lib/actions'
 import { DeletePostButton } from '@/components/admin/delete-post-button'
 import { PenSquare, Eye, FileText, CheckCircle, Clock, PenLine } from 'lucide-react'
 
@@ -144,11 +142,6 @@ function TableSkeleton() {
 }
 
 export default async function AdminDashboard() {
-  const isAuthenticated = await getSession()
-  if (!isAuthenticated) {
-    redirect('/admin/login')
-  }
-
   return (
     <div className="p-6 max-w-5xl">
       {/* Page header */}

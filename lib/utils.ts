@@ -6,11 +6,19 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
+  // Parse date as UTC to avoid timezone mismatches between server and client
+  const date = new Date(dateString)
+  
+  const monthNames = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+  ]
+  
+  const day = date.getUTCDate()
+  const month = monthNames[date.getUTCMonth()]
+  const year = date.getUTCFullYear()
+  
+  return `${day} ${month} ${year}`
 }
 
 export function slugify(title: string): string {

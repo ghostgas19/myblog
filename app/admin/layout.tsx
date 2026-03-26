@@ -1,13 +1,14 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { Film, LayoutDashboard, PenSquare, Home, LogOut } from 'lucide-react'
 import { getSession, logoutAction } from '@/lib/actions'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const isAuthenticated = await getSession()
 
-  // If not authenticated, render children directly (for login page)
+  // If not authenticated, redirect to login
   if (!isAuthenticated) {
-    return <>{children}</>
+    redirect('/admin/login')
   }
 
   return (

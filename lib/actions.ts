@@ -134,6 +134,7 @@ export async function loginAction(formData: FormData) {
       maxAge: 60 * 60 * 24, // 24 hours
       path: "/",
     });
+    revalidatePath("/admin", "layout");
     return { success: true };
   }
   return { error: "Invalid credentials. Try admin@ruangcerita.id / password" };
