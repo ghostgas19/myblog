@@ -7,6 +7,8 @@ import { BlogSidebar } from "@/components/blog-sidebar";
 import { PostsSkeleton } from "@/components/posts-skeleton";
 import { Settings } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 async function PostsSection() {
   const [posts, categories] = await Promise.all([
     getPublishedPosts(),

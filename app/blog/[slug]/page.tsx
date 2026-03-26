@@ -1,17 +1,14 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getPostBySlug, getPublishedPosts } from '@/lib/data'
+import { getPostBySlug } from '@/lib/data'
 import { formatDate } from '@/lib/utils'
 import { FilmStrip } from '@/components/film-strip'
 import { ArrowLeft, Clock, Tag } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ slug: string }>
-}
-
-export async function generateStaticParams() {
-  const posts = await getPublishedPosts()
-  return posts.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: Props) {

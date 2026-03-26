@@ -1,7 +1,9 @@
 import type { Post } from "./types";
+import { list, put } from "@vercel/blob";
 
-// In-memory categories store
-let categories: string[] = [
+// ---- Default seed data (digunakan saat pertama kali atau fallback) ----
+
+const defaultCategories: string[] = [
   "Refleksi",
   "Perjalanan",
   "Rekomendasi",
@@ -10,34 +12,8 @@ let categories: string[] = [
   "Harian",
 ];
 
-export async function getCategories(): Promise<string[]> {
-  return [...categories];
-}
-
-export function createCategory(name: string): string {
-  const normalized = name.trim();
-  if (
-    categories.map((c) => c.toLowerCase()).includes(normalized.toLowerCase())
-  ) {
-    return categories.find(
-      (c) => c.toLowerCase() === normalized.toLowerCase(),
-    )!;
-  }
-  categories.push(normalized);
-  return normalized;
-}
-
-export function deleteCategory(name: string): boolean {
-  const idx = categories.findIndex(
-    (c) => c.toLowerCase() === name.toLowerCase(),
-  );
-  if (idx === -1) return false;
-  categories.splice(idx, 1);
-  return true;
-}
-
-// In-memory store — swap this out for Prisma/Drizzle ORM later
-const posts: Post[] = [
+// Seed posts – akan disalin ke Blob saat pertama kali
+const defaultPosts: Post[] = [
   {
     id: "1",
     title: "Mengapa Saya Mulai Menulis Lagi Setelah Dua Tahun Diam",
@@ -176,46 +152,217 @@ Dan ketika foto-foto itu akhirnya muncul — dengan segala ketidaksempurnaannya,
   },
 ];
 
-// Simulated async DB layer — swap for Prisma later
+// ---- Vercel Blob-backed storage ----
+
+type BlogState = {
+  categories: string[];
+  posts: Post[];
+};
+
+const DATA_BLOB_KEY = "blog-data.json";
+
+// Digunakan sebagai fallback in-memory ketika Vercel Blob belum dikonfigurasi
+let memoryState: BlogState | null = null;
+
+async function readFromBlob(): Promise<BlogState | null> {
+  try {
+    const { blobs } = await list({ prefix: DATA_BLOB_KEY, limit: 1 });
+    const file = blobs.find((b) => b.pathname === DATA_BLOB_KEY);
+    if (!file) return null;
+
+    const res = await fetch(file.url, { cache: "no-store" });
+    if (!res.ok) return null;
+
+    const json = (await res.json()) as Partial<BlogState>;
+    if (!Array.isArray(json.posts) || !Array.isArray(json.categories)) {
+      return null;
+    }
+
+    return {
+      categories: json.categories,
+      posts: json.posts,
+    };
+  } catch (error) {
+    console.error("Failed to read blog data from Vercel Blob:", error);
+    return null;
+  }
+}
+
+async function writeToBlob(state: BlogState): Promise<void> {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    // Di dev lokal tanpa konfigurasi Blob, kita skip supaya tidak error
+    return;
+  }
+
+  try {
+    await put(DATA_BLOB_KEY, JSON.stringify(state, null, 2), {
+      access: "private",
+      contentType: "application/json",
+    });
+  } catch (error) {
+    console.error("Failed to write blog data to Vercel Blob:", error);
+  }
+}
+
+async function loadState(): Promise<BlogState> {
+  // Jika Blob belum dikonfigurasi, gunakan state in-memory
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    if (!memoryState) {
+      memoryState = {
+        categories: [...defaultCategories],
+        posts: [...defaultPosts],
+      };
+    }
+    return memoryState;
+  }
+
+  const fromBlob = await readFromBlob();
+  if (fromBlob) return fromBlob;
+
+  // Jika belum ada di Blob, gunakan seed dan coba tulis ke Blob
+  const seeded: BlogState = {
+    categories: [...defaultCategories],
+    posts: [...defaultPosts],
+  };
+
+  await writeToBlob(seeded);
+  return seeded;
+}
+
+async function withMutatedState(
+  mutator: (state: BlogState) => void,
+): Promise<BlogState> {
+  const state = await loadState();
+  mutator(state);
+
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    memoryState = state;
+    return state;
+  }
+
+  await writeToBlob(state);
+  return state;
+}
+
+// ---- Categories API ----
+
+export async function getCategories(): Promise<string[]> {
+  const state = await loadState();
+  return [...state.categories];
+}
+
+export async function createCategory(name: string): Promise<string> {
+  const normalized = name.trim();
+  if (!normalized) return normalized;
+
+  let saved = normalized;
+
+  await withMutatedState((state) => {
+    const existingIndex = state.categories
+      .map((c) => c.toLowerCase())
+      .indexOf(normalized.toLowerCase());
+
+    if (existingIndex !== -1) {
+      saved = state.categories[existingIndex];
+      return;
+    }
+
+    state.categories.push(normalized);
+  });
+
+  return saved;
+}
+
+export async function deleteCategory(name: string): Promise<boolean> {
+  let deleted = false;
+
+  await withMutatedState((state) => {
+    const idx = state.categories.findIndex(
+      (c) => c.toLowerCase() === name.toLowerCase(),
+    );
+    if (idx === -1) return;
+    state.categories.splice(idx, 1);
+    deleted = true;
+  });
+
+  return deleted;
+}
+
+// ---- Posts API ----
+
 export async function getPosts(): Promise<Post[]> {
-  return posts;
+  const state = await loadState();
+  // Urutkan terbaru dulu berdasarkan createdAt
+  return [...state.posts].sort((a, b) =>
+    a.createdAt < b.createdAt ? 1 : -1,
+  );
 }
 
 export async function getPublishedPosts(): Promise<Post[]> {
+  const posts = await getPosts();
   return posts.filter((p) => p.status === "published");
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-  return posts.find((p) => p.slug === slug);
+  const state = await loadState();
+  return state.posts.find((p) => p.slug === slug);
 }
 
 export async function getPostById(id: string): Promise<Post | undefined> {
-  return posts.find((p) => p.id === id);
+  const state = await loadState();
+  return state.posts.find((p) => p.id === id);
 }
 
-export function createPost(data: Omit<Post, "id" | "createdAt">): Post {
-  const newPost: Post = {
-    ...data,
-    id: String(Date.now()),
-    createdAt: new Date().toISOString(),
-  };
-  posts.push(newPost);
-  return newPost;
+export async function createPost(
+  data: Omit<Post, "id" | "createdAt">,
+): Promise<Post> {
+  let newPost: Post | null = null;
+
+  await withMutatedState((state) => {
+    newPost = {
+      ...data,
+      id: String(Date.now()),
+      createdAt: new Date().toISOString(),
+    };
+    state.posts.push(newPost!);
+  });
+
+  return newPost!;
 }
 
-export function updatePost(
+export async function updatePost(
   id: string,
-  data: Partial<Omit<Post, "id">>,
-): Post | null {
-  const idx = posts.findIndex((p) => p.id === id);
-  if (idx === -1) return null;
-  posts[idx] = { ...posts[idx], ...data };
-  return posts[idx];
+  data: Partial<Omit<Post, "id" | "createdAt">>,
+): Promise<Post | null> {
+  let updated: Post | null = null;
+
+  await withMutatedState((state) => {
+    const idx = state.posts.findIndex((p) => p.id === id);
+    if (idx === -1) return;
+
+    const existing = state.posts[idx];
+    state.posts[idx] = {
+      ...existing,
+      ...data,
+      id: existing.id,
+      createdAt: existing.createdAt,
+    };
+
+    updated = state.posts[idx];
+  });
+
+  return updated;
 }
 
-export function deletePost(id: string): boolean {
-  const idx = posts.findIndex((p) => p.id === id);
-  if (idx === -1) return false;
-  posts.splice(idx, 1);
-  return true;
+export async function deletePost(id: string): Promise<boolean> {
+  let ok = false;
+
+  await withMutatedState((state) => {
+    const idx = state.posts.findIndex((p) => p.id === id);
+    if (idx === -1) return;
+    state.posts.splice(idx, 1);
+    ok = true;
+  });
+
+  return ok;
 }

@@ -30,7 +30,7 @@ export async function createPostAction(formData: FormData) {
     return { error: "Title, category and content are required." };
   }
 
-  const post = createPost({
+  const post = await createPost({
     title,
     slug,
     excerpt: content.slice(0, 180).replace(/\*\*/g, "") + "...",
@@ -61,7 +61,7 @@ export async function updatePostAction(id: string, formData: FormData) {
     return { error: "Title, category and content are required." };
   }
 
-  const post = updatePost(id, {
+  const post = await updatePost(id, {
     title,
     slug,
     excerpt: content.slice(0, 180).replace(/\*\*/g, "") + "...",
@@ -81,7 +81,7 @@ export async function updatePostAction(id: string, formData: FormData) {
 }
 
 export async function deletePostAction(id: string) {
-  const ok = deletePost(id);
+  const ok = await deletePost(id);
   if (!ok) return { error: "Post not found." };
 
   revalidatePath("/", "layout");
@@ -96,7 +96,7 @@ export async function createCategoryAction(name: string) {
   if (trimmed.length > 40)
     return { error: "Nama kategori maksimal 40 karakter." };
 
-  const category = createCategory(trimmed);
+  const category = await createCategory(trimmed);
   revalidatePath("/", "layout");
   revalidatePath("/admin", "layout");
 
@@ -106,7 +106,7 @@ export async function createCategoryAction(name: string) {
 export async function deleteCategoryAction(name: string) {
   if (!name) return { error: "Nama kategori tidak valid." };
 
-  const ok = deleteCategory(name);
+  const ok = await deleteCategory(name);
   if (!ok) return { error: "Kategori tidak ditemukan." };
 
   revalidatePath("/", "layout");
