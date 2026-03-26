@@ -164,14 +164,10 @@ const DATA_BLOB_KEY = "blog-data.json";
 // Digunakan sebagai fallback in-memory ketika Vercel Blob belum dikonfigurasi
 let memoryState: BlogState | null = null;
 
-// Blob dianggap "aktif" kalau:
-// - Di lokal: kamu set BLOB_READ_WRITE_TOKEN
-// - Di Vercel: process.env.VERCEL atau VERCEL_ENV otomatis ter-set
-const blobEnabled = Boolean(
-  process.env.BLOB_READ_WRITE_TOKEN ||
-    process.env.VERCEL ||
-    process.env.VERCEL_ENV,
-);
+// Blob dianggap "aktif" hanya kalau BLOB_READ_WRITE_TOKEN diset.
+// Artinya: kamu wajib set env ini baik di lokal maupun di Vercel
+// supaya data benar-benar tersimpan di Vercel Blob.
+const blobEnabled = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
 async function readFromBlob(): Promise<BlogState | null> {
   try {
