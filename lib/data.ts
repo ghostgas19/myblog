@@ -201,7 +201,8 @@ async function writeToBlob(state: BlogState): Promise<void> {
 
   try {
     await put(DATA_BLOB_KEY, JSON.stringify(state, null, 2), {
-      access: "private",
+      // Store kamu saat ini public, jadi akses juga harus public
+      access: "public",
       contentType: "application/json",
     });
   } catch (error) {
