@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import {
   createPost,
   updatePost,
@@ -9,6 +11,9 @@ import {
   deleteCategory,
 } from "./data";
 import type { PostStatus } from "./types";
+
+const SESSION_COOKIE_NAME = "admin_session";
+const SESSION_TOKEN = "authenticated_admin_session_token";
 
 function slugify(title: string): string {
   return title
@@ -121,7 +126,27 @@ export async function loginAction(formData: FormData) {
 
   // Mock auth — replace with real auth (NextAuth, Supabase, etc.)
   if (email === "admin@ruangcerita.id" && password === "password") {
+    const cookieStore = await cookies();
+    cookieStore.set(SESSION_COOKIE_NAME, SESSION_TOKEN, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24, // 24 hours
+      path: "/",
+    });
     return { success: true };
   }
   return { error: "Invalid credentials. Try admin@ruangcerita.id / password" };
+}
+
+export async function logoutAction() {
+  const cookieStore = await cookies();
+  cookieStore.delete(SESSION_COOKIE_NAME);
+  redirect("/admin/login");
+}
+
+export async function getSession() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get(SESSION_COOKIE_NAME);
+  return session?.value === SESSION_TOKEN;
 }

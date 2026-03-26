@@ -1,7 +1,15 @@
 import Link from 'next/link'
-import { LayoutDashboard, PenSquare, Home, Film } from 'lucide-react'
+import { Film, LayoutDashboard, PenSquare, Home, LogOut } from 'lucide-react'
+import { getSession, logoutAction } from '@/lib/actions'
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const isAuthenticated = await getSession()
+
+  // If not authenticated, render children directly (for login page)
+  if (!isAuthenticated) {
+    return <>{children}</>
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground flex">
       {/* Sidebar */}
@@ -26,8 +34,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Bottom */}
-        <div className="p-3 border-t border-sidebar-border">
+        <div className="p-3 border-t border-sidebar-border space-y-1">
           <NavItem href="/" icon={<Home className="w-4 h-4" />} label="Lihat Blog" />
+          <form action={logoutAction}>
+            <button
+              type="submit"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-sm text-sm text-sidebar-foreground hover:bg-destructive/20 hover:text-destructive transition-colors duration-200 group"
+            >
+              <span className="text-muted-foreground group-hover:text-destructive transition-colors duration-200">
+                <LogOut className="w-4 h-4" />
+              </span>
+              <span className="font-mono text-[11px] tracking-[1.5px] uppercase">Logout</span>
+            </button>
+          </form>
         </div>
       </aside>
 
