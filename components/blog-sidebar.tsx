@@ -30,7 +30,7 @@ export function BlogSidebar({ postCount }: BlogSidebarProps) {
           <div className="w-14 h-14 rounded-full border-2 border-amber bg-maroon-deep flex items-center justify-center text-2xl mb-2.5">
             👤
           </div>
-          <div className="font-serif text-base text-foreground text-center">NemeanLeon</div>
+          <div className="font-serif text-base text-foreground text-center">GhostGas</div>
           <p className="text-[0.75rem] leading-relaxed text-cream-dark text-center opacity-80 mt-1.5">
             Penulis amatir, penggemar kopi sore, dan seseorang yang masih mencari cara terbaik untuk
             membuat hidup terasa bermakna — satu tulisan per waktu.

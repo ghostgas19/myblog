@@ -135,7 +135,7 @@ export default function HomePage() {
             Kodak · Ruang Cerita · 135mm
           </div>
           <p className="text-xs text-muted-foreground italic">
-            Ditulis dengan hati, disimpan untuk kenangan. &copy; 2025 NemeanLeon
+            Ditulis dengan hati, disimpan untuk kenangan. &copy; 2026 GhostGas
           </p>
           <Link
             href="/admin"
