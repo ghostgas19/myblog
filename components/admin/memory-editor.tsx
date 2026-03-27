@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Memory, getMemories, addMemory, deleteMemory, updateMemory } from "@/lib/data";
+import { getMemories, addMemory, deleteMemory, updateMemory } from "@/lib/data";
+import { Memory } from "@/lib/types";
 import { ImageUpload } from "@/components/admin/image-upload";
 import { 
   Camera, 
@@ -19,6 +20,7 @@ export function MemoryEditor() {
   const [memories, setMemories] = useState<Memory[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [newItem, setNewItem] = useState({
     image: "",
     location: "",
@@ -66,12 +68,17 @@ export function MemoryEditor() {
 
   async function handleDelete(id: string) {
     if (!confirm("Hapus kenangan ini?")) return;
+    setDeletingId(id);
     try {
       await deleteMemory(id);
+      setMemories(memories.filter(m => m.id !== id));
       toast.success("Kenangan dihapus");
       fetchMemories();
     } catch (err) {
+      console.error("Delete memory error:", err);
       toast.error("Gagal menghapus");
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -163,7 +170,7 @@ export function MemoryEditor() {
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {memories.map((memory) => (
+          {memories.map((memory: Memory) => (
             <div key={memory.id} className="bg-card border border-border rounded-sm overflow-hidden flex flex-col group">
               <div className="aspect-square relative overflow-hidden bg-muted">
                 <img 
@@ -173,9 +180,15 @@ export function MemoryEditor() {
                 />
                 <button
                   onClick={() => handleDelete(memory.id)}
-                  className="absolute top-2 right-2 p-2 bg-destructive/80 hover:bg-destructive text-destructive-foreground rounded-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  disabled={deletingId === memory.id}
+                  className="absolute top-2 right-2 z-20 p-2 bg-destructive/90 hover:bg-destructive text-white rounded-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity disabled:opacity-50"
+                  title="Hapus Kenangan"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  {deletingId === memory.id ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               <div className="p-4 flex-1 flex flex-col">

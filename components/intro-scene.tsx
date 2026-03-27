@@ -17,7 +17,7 @@ export function IntroScene({ onComplete }: { onComplete: () => void }) {
     if (index < INTRO_TEXTS.length) {
       const timer = setTimeout(() => {
         setIndex((prev) => prev + 1);
-      }, 2000); // 2 detik per teks
+      }, 2500); // 2.5 detik per teks
       return () => clearTimeout(timer);
     } else {
       const finalTimer = setTimeout(() => {

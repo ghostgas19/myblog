@@ -561,11 +561,16 @@ export async function addMemory(memory: Omit<Memory, "id" | "created_at">) {
 }
 
 export async function deleteMemory(id: string) {
+  console.log("Menghapus kenangan dengan ID:", id);
   const { error } = await supabase
     .from("memories")
     .delete()
     .eq("id", id);
-  if (error) throw error;
+  
+  if (error) {
+    console.error("Gagal menghapus kenganan di Supabase:", error);
+    throw error;
+  }
   return true;
 }
 
