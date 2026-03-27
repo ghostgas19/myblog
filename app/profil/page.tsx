@@ -10,7 +10,7 @@ export default async function ProfilPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <FilmStrip label="Profil Penulis · Analog Archive" />
+      <FilmStrip label="Author Profile · Analog Archive" />
       
       <div className="max-w-3xl mx-auto px-6 py-20">
         <header className="text-center mb-16">
@@ -26,7 +26,7 @@ export default async function ProfilPage() {
                 <span className="text-6xl">{profile.avatar || '👤'}</span>
               )}
             </div>
-            <p className="font-mono text-xs text-gray-500 mt-4 tracking-widest text-center uppercase">Pas Foto · {new Date().getFullYear()}</p>
+            <p className="font-mono text-xs text-gray-500 mt-4 tracking-widest text-center uppercase">ID Photo · {new Date().getFullYear()}</p>
           </div>
           
           <h1 className="font-serif text-5xl font-bold text-amber mb-4">{profile.name}</h1>
@@ -39,7 +39,7 @@ export default async function ProfilPage() {
 
         <div className="mt-20 flex justify-center">
           <Link href="/" className="font-mono text-xs tracking-[4px] text-amber hover:text-film-yellow transition-colors uppercase border border-amber/30 px-8 py-3 rounded-full hover:bg-amber/5">
-            ← Kembali ke Beranda
+            ← Back to Home
           </Link>
         </div>
       </div>

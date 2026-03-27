@@ -77,7 +77,7 @@ export default function KenanganPage() {
       <main className="max-w-6xl mx-auto px-6">
         <header className="text-center pt-20 pb-16">
           <div className="inline-block bg-film-yellow text-primary-foreground font-mono text-[10px] tracking-[4px] uppercase px-4 py-1 rounded-sm mb-5 shadow-[2px_2px_0_theme(colors.amber)]">
-            ▣ Koleksi Klip Foto · Memory Archive
+            ▣ Photo Clip Collection · Memory Archive
           </div>
           <h1 className="font-serif text-5xl md:text-7xl font-bold leading-none tracking-tight text-foreground [text-shadow:3px_3px_0_theme(colors.maroon-deep)]">
             Memories{" "}

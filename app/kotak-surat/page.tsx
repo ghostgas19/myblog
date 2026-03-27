@@ -33,15 +33,15 @@ export default function KotakSuratPage() {
         body: JSON.stringify({ content, sender_name: senderName }),
       });
 
-      if (!res.ok) throw new Error("Gagal mengirim pesan");
+      if (!res.ok) throw new Error("Failed to send message");
 
       setIsSent(true);
       setContent("");
       setSenderName("");
-      toast.success("Pesan terkirim ke kotak surat!");
+      toast.success("Message sent to the inbox!");
     } catch (err) {
-      setError("Maaf, terjadi kesalahan. Coba lagi nanti.");
-      toast.error("Gagal mengirim pesan.");
+      setError("Sorry, an error occurred. Please try again later.");
+      toast.error("Failed to send message.");
     } finally {
       setIsSending(false);
     }
@@ -49,12 +49,12 @@ export default function KotakSuratPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <FilmStrip label="Kotak Surat · Pesan Tanpa Nama" />
+      <FilmStrip label="Inbox · Anonymous Messages" />
 
       <div className="max-w-2xl mx-auto px-6 py-20">
         <header className="text-center mb-12">
-          <h1 className="font-serif text-5xl font-bold text-amber mb-4 italic">Kotak Surat</h1>
-          <p className="font-mono text-sm tracking-[3px] text-maroon-light uppercase">Titipkan pesan, rahasia, atau sapaan hangat.</p>
+          <h1 className="font-serif text-5xl font-bold text-amber mb-4 italic">Inbox</h1>
+          <p className="font-mono text-sm tracking-[3px] text-maroon-light uppercase">Leave a message, a secret, or a warm greeting.</p>
         </header>
 
         {isSent ? (
@@ -62,15 +62,15 @@ export default function KotakSuratPage() {
             <div className="w-20 h-20 bg-amber/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <Send className="w-8 h-8 text-amber" />
             </div>
-            <h2 className="font-serif text-2xl font-bold mb-4">Pesan Terkirim!</h2>
+            <h2 className="font-serif text-2xl font-bold mb-4">Message Sent!</h2>
             <p className="font-sans text-muted-foreground mb-8 text-balance">
-              Terima kasih telah menitipkan pesanmu di kotak surat ini. Mungkin suatu saat nanti akan terjawab.
+              Thank you for leaving your message in this inbox. Maybe it will be answered someday.
             </p>
             <button
               onClick={() => setIsSent(false)}
               className="font-mono text-[10px] tracking-[3px] uppercase text-amber hover:text-film-yellow transition-colors"
             >
-              Kirim Pesan Lain
+              Send Another Message
             </button>
           </div>
         ) : (
@@ -84,7 +84,7 @@ export default function KotakSuratPage() {
               <div className="relative z-10 space-y-6">
                 <textarea
                   required
-                  placeholder="Tuliskan pesanmu di sini..."
+                  placeholder="Write your message here..."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="w-full h-64 bg-transparent border-none focus:ring-0 font-mono text-lg resize-none placeholder:text-gray-400 leading-[2.5rem]"
@@ -92,10 +92,10 @@ export default function KotakSuratPage() {
                 />
                 
                 <div className="flex flex-col md:flex-row md:items-center gap-4 pt-4 border-t border-gray-200">
-                  <span className="font-mono text-xs uppercase tracking-widest text-gray-500">Dari:</span>
+                  <span className="font-mono text-xs uppercase tracking-widest text-gray-500">From:</span>
                   <input
                     type="text"
-                    placeholder="Nama atau Anonim"
+                    placeholder="Name or Anonymous"
                     value={senderName}
                     onChange={(e) => setSenderName(e.target.value)}
                     className="flex-1 bg-transparent border-none focus:ring-0 font-mono text-sm text-gray-700 italic placeholder:text-gray-300"
@@ -118,13 +118,13 @@ export default function KotakSuratPage() {
                 ) : (
                   <>
                     <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    Masukkan ke Kotak Surat
+                    Drop in Inbox
                   </>
                 )}
               </button>
               
               <Link href="/" className="font-mono text-[10px] tracking-[4px] text-muted-foreground hover:text-amber transition-colors uppercase">
-                ← Kembali
+                ← Back
               </Link>
             </div>
           </form>
@@ -136,10 +136,10 @@ export default function KotakSuratPage() {
         onClose={() => setShowConfirm(false)}
         onConfirm={handleSend}
         loading={isSending}
-        title="Kirim Pesan"
-        message="Pesan Anda akan dikirimkan ke kotak surat ini secara anonim. Yakin ingin mengirimkan?"
-        confirmText="Ya, Kirim Sekarang"
-        cancelText="Cek Dulu"
+        title="Send Message"
+        message="Your message will be sent anonymously to this inbox. Are you sure you want to send it?"
+        confirmText="Yes, Send Now"
+        cancelText="Check Again"
         variant="primary"
       />
     </div>

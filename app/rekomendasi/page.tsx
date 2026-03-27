@@ -9,22 +9,33 @@ export default async function RekomendasiPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <FilmStrip label="Rekomendasi · Kurasi Perasaan" />
+      <FilmStrip label="Recommendations · Curated Feelings" />
       
       <div className="max-w-4xl mx-auto px-6 py-20">
         <header className="text-center mb-16">
-          <h1 className="font-serif text-5xl font-bold text-amber mb-4">Rekomendasi</h1>
-          <p className="font-mono text-sm tracking-[3px] text-maroon-light uppercase italic">Hal-hal yang membuat hati tenang.</p>
+          <h1 className="font-serif text-5xl font-bold text-amber mb-4">Recommendations</h1>
+          <p className="font-mono text-sm tracking-[3px] text-maroon-light uppercase italic">Things that calm the soul.</p>
         </header>
 
         {recommendations.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground font-mono text-xs tracking-widest uppercase">
-            Belum ada rekomendasi yang ditambahkan.
+            No recommendations added yet.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {recommendations.map((item, i) => {
               const isImage = item.emoji?.startsWith('http') || item.emoji?.startsWith('/');
+              
+              const typeMap: Record<string, string> = {
+                'lagu': 'Song',
+                'film': 'Movie',
+                'buku': 'Book',
+                'musik': 'Music',
+                'song': 'Song',
+                'movie': 'Movie',
+                'book': 'Book'
+              };
+              const displayType = (item.type && typeMap[item.type.trim().toLowerCase()]) || item.type;
               
               return (
                 <div key={`${item.title}-${i}`} className="group flex flex-col items-center">
@@ -44,7 +55,7 @@ export default async function RekomendasiPage() {
                        <p className="font-mono text-[8px] text-gray-400 text-center tracking-widest uppercase truncate">{item.title}</p>
                     </div>
                   </div>
-                  <span className="font-mono text-[10px] tracking-[4px] text-maroon-light uppercase mb-2">{item.type}</span>
+                  <span className="font-mono text-[10px] tracking-[4px] text-maroon-light uppercase mb-2">{displayType}</span>
                   <h2 className="font-serif text-2xl font-bold group-hover:text-amber transition-colors text-center">{item.title}</h2>
                   <p className="font-sans italic text-muted-foreground opacity-80 text-center">{item.artist}</p>
                 </div>
@@ -55,7 +66,7 @@ export default async function RekomendasiPage() {
 
         <div className="mt-20 flex justify-center">
           <Link href="/" className="font-mono text-xs tracking-[4px] text-amber hover:text-film-yellow transition-colors uppercase border border-amber/30 px-8 py-3 rounded-full hover:bg-amber/5">
-            ← Kembali ke Beranda
+            ← Back to Home
           </Link>
         </div>
       </div>
