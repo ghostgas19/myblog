@@ -4,6 +4,8 @@ import { useState } from "react";
 import { FilmStrip } from "@/components/film-strip";
 import Link from "next/link";
 import { Send, Loader2 } from "lucide-react";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { toast } from "sonner";
 
 export default function KotakSuratPage() {
   const [content, setContent] = useState("");
@@ -11,11 +13,16 @@ export default function KotakSuratPage() {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [error, setError] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
+    setShowConfirm(true);
+  };
 
+  const handleSend = async () => {
+    setShowConfirm(false);
     setIsSending(true);
     setError("");
 
@@ -31,8 +38,10 @@ export default function KotakSuratPage() {
       setIsSent(true);
       setContent("");
       setSenderName("");
+      toast.success("Pesan terkirim ke kotak surat!");
     } catch (err) {
       setError("Maaf, terjadi kesalahan. Coba lagi nanti.");
+      toast.error("Gagal mengirim pesan.");
     } finally {
       setIsSending(false);
     }
@@ -65,7 +74,7 @@ export default function KotakSuratPage() {
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-8 relative">
+          <form onSubmit={handleFormSubmit} className="space-y-8 relative">
             {/* Paper decoration */}
             <div className="bg-[#fdfcf0] p-8 md:p-12 shadow-[10px_10px_0_rgba(0,0,0,0.2)] border border-amber/10 min-h-[400px] relative text-gray-800">
               {/* Lines */}
@@ -121,6 +130,18 @@ export default function KotakSuratPage() {
           </form>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleSend}
+        loading={isSending}
+        title="Kirim Pesan"
+        message="Pesan Anda akan dikirimkan ke kotak surat ini secara anonim. Yakin ingin mengirimkan?"
+        confirmText="Ya, Kirim Sekarang"
+        cancelText="Cek Dulu"
+        variant="primary"
+      />
     </div>
   );
 }

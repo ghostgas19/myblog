@@ -26,6 +26,8 @@ import {
   Loader2,
   Tag,
 } from "lucide-react";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { toast } from "sonner";
 
 interface PostEditorProps {
   post?: Post;
@@ -61,6 +63,10 @@ export function PostEditor({
   const [catPending, setCatPending] = useState(false);
   const [catError, setCatError] = useState<string | null>(null);
   const [deletingCat, setDeletingCat] = useState<string | null>(null);
+  const [showCatConfirm, setShowCatConfirm] = useState(false);
+  const [catToDelete, setCatToDelete] = useState<string | null>(null);
+  const [showPubConfirm, setShowPubConfirm] = useState(false);
+  const [tempStatus, setTempStatus] = useState<"draft" | "published">("draft");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const addInputRef = useRef<HTMLInputElement>(null);
@@ -144,21 +150,44 @@ export function PostEditor({
 
   async function handleDeleteCategory(cat: string, e: React.MouseEvent) {
     e.stopPropagation();
-    setDeletingCat(cat);
-    const result = await deleteCategoryAction(cat);
+    setCatToDelete(cat);
+    setShowCatConfirm(true);
+  }
+
+  async function executeDeleteCategory() {
+    if (!catToDelete) return;
+
+    setDeletingCat(catToDelete);
+    const result = await deleteCategoryAction(catToDelete);
     setDeletingCat(null);
+    setShowCatConfirm(false);
 
-    if (result.error) return;
+    if (result.error) {
+      toast.error(result.error);
+      return;
+    }
 
-    const remaining = categories.filter((c) => c !== cat);
+    toast.success(`Kategori "${catToDelete}" dihapus.`);
+    const remaining = categories.filter((c) => c !== catToDelete);
     setCategories(remaining);
-    if (category === cat) setCategory(remaining[0] ?? "");
+    if (category === catToDelete) setCategory(remaining[0] ?? "");
+    setCatToDelete(null);
   }
 
   function handleSubmit(submitStatus: "draft" | "published") {
+    if (submitStatus === "published") {
+      setTempStatus("published");
+      setShowPubConfirm(true);
+      return;
+    }
+    executeSubmit(submitStatus);
+  }
+
+  function executeSubmit(submitStatus: "draft" | "published") {
     setError(null);
     setSuccess(null);
     setStatus(submitStatus);
+    setShowPubConfirm(false);
 
     const formData = new FormData();
     formData.set("title", title);
@@ -175,12 +204,13 @@ export function PostEditor({
 
       if (result.error) {
         setError(result.error);
+        toast.error(result.error);
       } else {
-        setSuccess(
-          submitStatus === "published"
+        const msg = submitStatus === "published"
             ? "Tulisan berhasil dipublikasikan!"
-            : "Draft berhasil disimpan!",
-        );
+            : "Draft berhasil disimpan!";
+        setSuccess(msg);
+        toast.success(msg);
         if (!post) setTimeout(() => router.push("/admin"), 1200);
       }
     });
@@ -568,6 +598,31 @@ export function PostEditor({
           </div>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={showCatConfirm}
+        onClose={() => {
+          setShowCatConfirm(false);
+          setCatToDelete(null);
+        }}
+        onConfirm={executeDeleteCategory}
+        loading={!!deletingCat}
+        title="Hapus Kategori"
+        message={`Apakah Anda yakin ingin menghapus kategori "${catToDelete}"? Tulisan yang menggunakan kategori ini mungkin perlu diperbarui.`}
+        confirmText="Ya, Hapus"
+        variant="danger"
+      />
+
+      <ConfirmModal
+        isOpen={showPubConfirm}
+        onClose={() => setShowPubConfirm(false)}
+        onConfirm={() => executeSubmit(tempStatus)}
+        loading={pending}
+        title="Publikasikan Tulisan"
+        message="Yakin ingin mempublikasikan tulisan ini sekarang? Artikel akan langsung muncul di halaman utama blog Anda."
+        confirmText="Ya, Publikasikan"
+        variant="primary"
+      />
     </div>
   );
 }

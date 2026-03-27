@@ -3,50 +3,54 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { deletePostAction } from '@/lib/actions'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Loader2 } from 'lucide-react'
+import { ConfirmModal } from '@/components/ui/confirm-modal'
+import { toast } from 'sonner'
 
 export function DeletePostButton({ id }: { id: string }) {
-  const [confirming, setConfirming] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
   const [pending, startTransition] = useTransition()
   const router = useRouter()
 
   function handleDelete() {
     startTransition(async () => {
-      await deletePostAction(id)
-      router.refresh()
+      try {
+        await deletePostAction(id)
+        toast.success('Tulisan berhasil dihapus.')
+        router.refresh()
+      } catch (err) {
+        toast.error('Gagal menghapus tulisan.')
+      } finally {
+        setShowConfirm(false)
+      }
     })
   }
 
-  if (confirming) {
-    return (
-      <div className="flex items-center gap-2">
-        <span className="font-mono text-[9px] tracking-[1px] uppercase text-destructive-foreground">
-          Yakin?
-        </span>
-        <button
-          onClick={handleDelete}
-          disabled={pending}
-          className="font-mono text-[9px] tracking-[1px] uppercase text-destructive hover:underline disabled:opacity-50"
-        >
-          {pending ? '...' : 'Ya'}
-        </button>
-        <button
-          onClick={() => setConfirming(false)}
-          className="font-mono text-[9px] tracking-[1px] uppercase text-muted-foreground hover:underline"
-        >
-          Batal
-        </button>
-      </div>
-    )
-  }
-
   return (
-    <button
-      onClick={() => setConfirming(true)}
-      className="p-1.5 text-muted-foreground hover:text-destructive transition-colors duration-200"
-      aria-label="Hapus tulisan"
-    >
-      <Trash2 className="w-4 h-4" />
-    </button>
+    <>
+      <button
+        onClick={() => setShowConfirm(true)}
+        disabled={pending}
+        className="p-1.5 text-muted-foreground hover:text-destructive transition-colors duration-200 disabled:opacity-50"
+        aria-label="Hapus tulisan"
+      >
+        {pending ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Trash2 className="w-4 h-4" />
+        )}
+      </button>
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleDelete}
+        loading={pending}
+        title="Hapus Tulisan"
+        message="Yakin ingin menghapus tulisan ini? Tindakan ini tidak dapat dibatalkan dan semua data akan hilang."
+        confirmText="Ya, Hapus"
+        variant="danger"
+      />
+    </>
   )
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Lora, Special_Elite } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
+import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -38,6 +39,7 @@ export default function RootLayout({
         className={`${playfair.variable} ${lora.variable} ${specialElite.variable} font-sans antialiased`}
       >
         {children}
+        <Toaster richColors position="bottom-right" />
         <Analytics />
       </body>
     </html>

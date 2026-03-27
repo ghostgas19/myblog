@@ -15,6 +15,7 @@ import {
   Image as ImageIcon 
 } from "lucide-react";
 import { toast } from "sonner";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
 
 export function MemoryEditor() {
   const [memories, setMemories] = useState<Memory[]>([]);
@@ -31,6 +32,9 @@ export function MemoryEditor() {
   useEffect(() => {
     fetchMemories();
   }, []);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [targetId, setTargetId] = useState<string | null>(null);
 
   async function fetchMemories() {
     try {
@@ -67,7 +71,6 @@ export function MemoryEditor() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Hapus kenangan ini?")) return;
     setDeletingId(id);
     try {
       await deleteMemory(id);
@@ -79,7 +82,13 @@ export function MemoryEditor() {
       toast.error("Gagal menghapus");
     } finally {
       setDeletingId(null);
+      setShowDeleteConfirm(false);
     }
+  }
+
+  function triggerDelete(id: string) {
+    setTargetId(id);
+    setShowDeleteConfirm(true);
   }
 
   if (loading) {
@@ -179,7 +188,7 @@ export function MemoryEditor() {
                   className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
                 />
                 <button
-                  onClick={() => handleDelete(memory.id)}
+                  onClick={() => triggerDelete(memory.id)}
                   disabled={deletingId === memory.id}
                   className="absolute top-2 right-2 z-20 p-2 bg-destructive/90 hover:bg-destructive text-white rounded-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity disabled:opacity-50"
                   title="Hapus Kenangan"
@@ -216,6 +225,20 @@ export function MemoryEditor() {
           )}
         </div>
       </section>
+
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setTargetId(null);
+        }}
+        onConfirm={() => targetId && handleDelete(targetId)}
+        loading={!!deletingId}
+        title="Hapus Kenangan"
+        message="Anda akan menghapus frame kenangan ini. Foto dan cerita yang tersimpan akan hilang selamanya."
+        confirmText="Ya, Hapus"
+        variant="danger"
+      />
     </div>
   );
 }
