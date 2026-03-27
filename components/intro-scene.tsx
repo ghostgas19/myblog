@@ -17,7 +17,7 @@ export function IntroScene({ onComplete }: { onComplete: () => void }) {
     if (index < INTRO_TEXTS.length) {
       const timer = setTimeout(() => {
         setIndex((prev) => prev + 1);
-      }, 2500); // 2.5 detik per teks
+      }, 2000); // 2 detik per teks
       return () => clearTimeout(timer);
     } else {
       const finalTimer = setTimeout(() => {
@@ -31,7 +31,7 @@ export function IntroScene({ onComplete }: { onComplete: () => void }) {
     <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-8 overflow-hidden">
       {/* Dynamic scanlines for film feel */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-      
+
       <AnimatePresence mode="wait">
         {index < INTRO_TEXTS.length && (
           <motion.div
@@ -46,7 +46,7 @@ export function IntroScene({ onComplete }: { onComplete: () => void }) {
               &ldquo;{INTRO_TEXTS[index]}&rdquo;
             </p>
             {index === INTRO_TEXTS.length - 1 && (
-              <motion.div 
+              <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 1.5, delay: 0.5 }}
@@ -59,8 +59,8 @@ export function IntroScene({ onComplete }: { onComplete: () => void }) {
 
       {/* Film grain / Dust particles effect */}
       <div className="fixed inset-0 pointer-events-none mix-blend-screen opacity-20">
-         <div className="absolute inset-0 bg-transparent animate-pulse" 
-              style={{ backgroundImage: 'radial-gradient(circle, rgba(255,215,100,0.1) 1px, transparent 1px)', backgroundSize: '100px 100px' }} />
+        <div className="absolute inset-0 bg-transparent animate-pulse"
+          style={{ backgroundImage: 'radial-gradient(circle, rgba(255,215,100,0.1) 1px, transparent 1px)', backgroundSize: '100px 100px' }} />
       </div>
     </div>
   );
