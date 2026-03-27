@@ -1,32 +1,32 @@
-import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import { getPostBySlug } from '@/lib/data'
-import { formatDate } from '@/lib/utils'
-import { FilmStrip } from '@/components/film-strip'
-import { ArrowLeft, Clock, Tag } from 'lucide-react'
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { getPostBySlug } from "@/lib/data";
+import { formatDate } from "@/lib/utils";
+import { FilmStrip } from "@/components/film-strip";
+import { ArrowLeft, Clock, Tag } from "lucide-react";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 interface Props {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
-  if (!post) return {}
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) return {};
   return {
-    title: `${post.title} — Ruang Cerita`,
+    title: `${post.title} — Movies for Two`,
     description: post.excerpt,
-  }
+  };
 }
 
 export default async function PostPage({ params }: Props) {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
-  if (!post) notFound()
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) notFound();
 
-  const paragraphs = post.content.split('\n\n').filter(Boolean)
+  const paragraphs = post.content.split("\n\n").filter(Boolean);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -34,10 +34,16 @@ export default async function PostPage({ params }: Props) {
 
       <div className="max-w-2xl mx-auto px-6 pb-20 pt-10">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-8 text-xs font-mono tracking-widest uppercase text-muted-foreground">
-          <Link href="/" className="hover:text-amber transition-colors duration-200 flex items-center gap-1.5">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 mb-8 text-xs font-mono tracking-widest uppercase text-muted-foreground"
+        >
+          <Link
+            href="/"
+            className="hover:text-amber transition-colors duration-200 flex items-center gap-1.5"
+          >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Beranda
+            Home
           </Link>
           <span>/</span>
           <span className="text-amber truncate max-w-xs">{post.title}</span>
@@ -56,7 +62,7 @@ export default async function PostPage({ params }: Props) {
             className="absolute inset-0"
             style={{
               backgroundImage:
-                'repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.04) 6px, rgba(255,255,255,0.04) 12px)',
+                "repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.04) 6px, rgba(255,255,255,0.04) 12px)",
             }}
           />
         </div>
@@ -68,10 +74,12 @@ export default async function PostPage({ params }: Props) {
               <Tag className="w-2.5 h-2.5" />
               {post.category}
             </span>
-            <span className="text-xs text-muted-foreground italic">{formatDate(post.createdAt)}</span>
+            <span className="text-xs text-muted-foreground italic">
+              {formatDate(post.createdAt)}
+            </span>
             <span className="text-xs text-muted-foreground italic flex items-center gap-1">
               <Clock className="w-3 h-3" />
-              {post.readingTime} menit baca
+              {post.readingTime} min read
             </span>
           </div>
 
@@ -83,8 +91,8 @@ export default async function PostPage({ params }: Props) {
         </header>
 
         {/* Article body */}
-        <article 
-          className="prose prose-invert prose-amber max-w-none font-sans text-[0.96rem] leading-[1.85] text-cream-dark 
+        <article
+          className="prose prose-invert prose-amber max-w-none font-sans text-[0.96rem] leading-[1.85] text-cream-dark
                      prose-headings:font-serif prose-headings:text-foreground prose-headings:font-bold
                      prose-p:mb-5 prose-p:leading-relaxed
                      prose-strong:text-foreground prose-strong:font-semibold
@@ -93,7 +101,6 @@ export default async function PostPage({ params }: Props) {
                      prose-li:marker:text-amber"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-
 
         {/* Footer divider */}
         <div className="flex items-center gap-3 my-10" aria-hidden="true">
@@ -109,7 +116,7 @@ export default async function PostPage({ params }: Props) {
             className="font-mono text-[10px] tracking-[2px] uppercase text-amber-light hover:tracking-[4px] transition-all duration-200 flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Kembali ke Beranda
+            Back to Home
           </Link>
           <span className="font-mono text-[10px] text-muted-foreground tracking-widest">
             ■ {post.slug.slice(0, 6).toUpperCase()}
@@ -117,5 +124,5 @@ export default async function PostPage({ params }: Props) {
         </div>
       </div>
     </div>
-  )
+  );
 }

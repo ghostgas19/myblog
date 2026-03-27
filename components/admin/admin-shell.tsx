@@ -14,15 +14,9 @@ import {
   Camera,
 } from "lucide-react";
 
-
-
 import { cn } from "@/lib/utils";
 
-export function AdminShell({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function AdminShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
 
   function close() {
@@ -80,7 +74,7 @@ export function AdminShell({
             </button>
 
             <span className="font-mono text-[9px] tracking-[3px] sm:tracking-[4px] uppercase text-film-yellow opacity-80">
-              ▣ CMS · Ruang Cerita
+              ▣ CMS · Movies for Two
             </span>
           </div>
         </header>
@@ -91,23 +85,19 @@ export function AdminShell({
   );
 }
 
-function AdminSidebarContent({
-  onNavigate,
-}: {
-  onNavigate?: () => void;
-}) {
+function AdminSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
       {/* Logo */}
-      <Link 
-        href="/admin" 
+      <Link
+        href="/admin"
         onClick={onNavigate}
         className="p-5 border-b border-sidebar-border block hover:bg-sidebar-accent/10 transition-colors group"
       >
         <div className="flex items-center gap-2.5 mb-0.5 group-hover:translate-x-0.5 transition-transform">
           <Film className="w-4 h-4 text-amber" />
           <span className="font-serif text-base font-bold text-foreground">
-            Ruang <em className="italic text-amber-light">Cerita</em>
+            Movies <em className="italic text-amber-light">for Two</em>
           </span>
         </div>
         <span className="font-mono text-[9px] tracking-[3px] uppercase text-muted-foreground">
@@ -126,29 +116,27 @@ function AdminSidebarContent({
         <NavItem
           href="/admin/new"
           icon={<PenSquare className="w-4 h-4" />}
-          label="Tulisan Baru"
+          label="New Post"
           onClick={onNavigate}
         />
         <NavItem
           href="/admin/messages"
           icon={<Mail className="w-4 h-4" />}
-          label="Pesan Masuk"
+          label="Inbox"
           onClick={onNavigate}
         />
-        <NavItem 
-          href="/admin/kenangan" 
-          icon={<Camera className="w-4 h-4" />} 
-          label="Kenangan" 
-          onClick={onNavigate} 
+        <NavItem
+          href="/admin/kenangan"
+          icon={<Camera className="w-4 h-4" />}
+          label="Memories"
+          onClick={onNavigate}
         />
         <NavItem
           href="/admin/settings"
           icon={<Settings className="w-4 h-4" />}
-          label="Pengaturan"
+          label="Settings"
           onClick={onNavigate}
         />
-
-
       </nav>
 
       {/* Bottom */}
@@ -184,7 +172,9 @@ function NavItem({
       <span className="text-muted-foreground group-hover:text-amber transition-colors duration-200">
         {icon}
       </span>
-      <span className="font-mono text-[11px] tracking-[1.5px] uppercase">{label}</span>
+      <span className="font-mono text-[11px] tracking-[1.5px] uppercase">
+        {label}
+      </span>
     </Link>
   );
 }

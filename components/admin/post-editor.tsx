@@ -167,7 +167,7 @@ export function PostEditor({
       return;
     }
 
-    toast.success(`Kategori "${catToDelete}" dihapus.`);
+    toast.success(`Category "${catToDelete}" deleted.`);
     const remaining = categories.filter((c) => c !== catToDelete);
     setCategories(remaining);
     if (category === catToDelete) setCategory(remaining[0] ?? "");
@@ -206,9 +206,10 @@ export function PostEditor({
         setError(result.error);
         toast.error(result.error);
       } else {
-        const msg = submitStatus === "published"
-            ? "Tulisan berhasil dipublikasikan!"
-            : "Draft berhasil disimpan!";
+        const msg =
+          submitStatus === "published"
+            ? "Post published successfully!"
+            : "Draft saved successfully!";
         setSuccess(msg);
         toast.success(msg);
         if (!post) setTimeout(() => router.push("/admin"), 1200);
@@ -222,10 +223,10 @@ export function PostEditor({
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-serif text-2xl font-bold text-foreground">
-            {post ? "Edit Tulisan" : "Tulisan Baru"}
+            {post ? "Edit Post" : "New Post"}
           </h1>
           <p className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground mt-0.5">
-            {post ? `Editing: ${post.slug}` : "Buat artikel baru"}
+            {post ? `Editing: ${post.slug}` : "Create new article"}
           </p>
         </div>
         <button
@@ -233,7 +234,7 @@ export function PostEditor({
           onClick={() => router.back()}
           className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Kembali
+          ← Back
         </button>
       </div>
 
@@ -266,13 +267,13 @@ export function PostEditor({
           {/* Title */}
           <div className="space-y-1.5">
             <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground flex items-center gap-1.5">
-              <Type className="w-3 h-3" /> Judul
+              <Type className="w-3 h-3" /> Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Judul tulisan..."
+              placeholder="Post title..."
               className="w-full bg-input border border-border rounded-sm px-3 py-2.5 text-base font-serif font-semibold text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
             />
           </div>
@@ -302,16 +303,13 @@ export function PostEditor({
           {/* Content Editor */}
           <div className="space-y-1.5">
             <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground flex items-center gap-1.5">
-              <Bold className="w-3 h-3" /> Konten
+              <Bold className="w-3 h-3" /> Content
               <span className="ml-auto text-muted-foreground/50">
-                {wordCount} kata · ~{Math.ceil(wordCount / 200)} min baca
+                {wordCount} words · ~{Math.ceil(wordCount / 200)} min read
               </span>
             </label>
 
-            <WYSIWYGEditor 
-              content={content} 
-              onChange={setContent} 
-            />
+            <WYSIWYGEditor content={content} onChange={setContent} />
           </div>
         </div>
 
@@ -327,7 +325,7 @@ export function PostEditor({
               }}
             />
             <div className="px-4 py-3 border-b border-border font-mono text-[10px] tracking-[2px] uppercase text-amber">
-              Publikasi
+              Publish
             </div>
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between text-xs">
@@ -352,9 +350,7 @@ export function PostEditor({
                 className="w-full flex items-center justify-center gap-2 border border-border text-muted-foreground hover:text-foreground hover:border-foreground/30 font-mono text-[10px] tracking-[2px] uppercase px-3 py-2.5 rounded-sm transition-colors duration-200 disabled:opacity-50"
               >
                 <Save className="w-3.5 h-3.5" />
-                {pending && status === "draft"
-                  ? "Menyimpan..."
-                  : "Simpan Draft"}
+                {pending && status === "draft" ? "Saving..." : "Save Draft"}
               </button>
 
               <button
@@ -365,8 +361,8 @@ export function PostEditor({
               >
                 <Send className="w-3.5 h-3.5" />
                 {pending && status === "published"
-                  ? "Mempublikasikan..."
-                  : "Publikasikan"}
+                  ? "Publishing..."
+                  : "Publish"}
               </button>
             </div>
           </div>
@@ -402,7 +398,7 @@ export function PostEditor({
                   <span className="truncate">
                     {category || (
                       <span className="text-muted-foreground italic">
-                        Pilih kategori...
+                        Select category...
                       </span>
                     )}
                   </span>
@@ -420,7 +416,7 @@ export function PostEditor({
                     <ul className="max-h-48 overflow-y-auto">
                       {categories.length === 0 && !showAddInput && (
                         <li className="px-3 py-3 text-center font-mono text-[10px] text-muted-foreground italic">
-                          Belum ada kategori.
+                          No categories yet.
                         </li>
                       )}
 
@@ -495,7 +491,7 @@ export function PostEditor({
                                 setCatError(null);
                               }
                             }}
-                            placeholder="Nama kategori baru..."
+                            placeholder="New category name..."
                             maxLength={40}
                             className="flex-1 min-w-0 bg-input border border-border rounded-sm px-2.5 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
                           />
@@ -535,7 +531,7 @@ export function PostEditor({
                         )}
 
                         <p className="font-mono text-[9px] text-muted-foreground/50 px-0.5">
-                          Enter simpan · Esc batal
+                          Enter to save · Esc to cancel
                         </p>
                       </div>
                     ) : (
@@ -553,7 +549,7 @@ export function PostEditor({
                           <Plus className="w-3.5 h-3.5" />
                         </span>
                         <span className="font-mono text-[10px] tracking-[1.5px] uppercase">
-                          Tambah kategori baru
+                          Add new category
                         </span>
                       </button>
                     )}
@@ -585,13 +581,15 @@ export function PostEditor({
                     /blog/{slug || "..."}
                   </p>
                   <p className="text-xs text-muted-foreground italic line-clamp-2 mt-1">
-                    {content.replace(/<[^>]*>?/gm, '').slice(0, 100)}
-                    {content.replace(/<[^>]*>?/gm, '').length > 100 ? "..." : ""}
+                    {content.replace(/<[^>]*>?/gm, "").slice(0, 100)}
+                    {content.replace(/<[^>]*>?/gm, "").length > 100
+                      ? "..."
+                      : ""}
                   </p>
                 </>
               ) : (
                 <p className="text-xs text-muted-foreground italic">
-                  Mulai menulis untuk melihat pratinjau.
+                  Start writing to see a preview.
                 </p>
               )}
             </div>
@@ -607,9 +605,9 @@ export function PostEditor({
         }}
         onConfirm={executeDeleteCategory}
         loading={!!deletingCat}
-        title="Hapus Kategori"
-        message={`Apakah Anda yakin ingin menghapus kategori "${catToDelete}"? Tulisan yang menggunakan kategori ini mungkin perlu diperbarui.`}
-        confirmText="Ya, Hapus"
+        title="Delete Category"
+        message={`Are you sure you want to delete the category "${catToDelete}"? Posts using this category may need to be updated.`}
+        confirmText="Yes, Delete"
         variant="danger"
       />
 
@@ -618,9 +616,9 @@ export function PostEditor({
         onClose={() => setShowPubConfirm(false)}
         onConfirm={() => executeSubmit(tempStatus)}
         loading={pending}
-        title="Publikasikan Tulisan"
-        message="Yakin ingin mempublikasikan tulisan ini sekarang? Artikel akan langsung muncul di halaman utama blog Anda."
-        confirmText="Ya, Publikasikan"
+        title="Publish Post"
+        message="Are you sure you want to publish this post now? The article will immediately appear on your blog's main page."
+        confirmText="Yes, Publish"
         variant="primary"
       />
     </div>

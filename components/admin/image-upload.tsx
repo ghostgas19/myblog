@@ -1,77 +1,81 @@
-'use client'
+"use client";
 
-import { useState, useRef } from 'react'
-import { Upload, X, Loader2, CheckCircle } from 'lucide-react'
+import { useState, useRef } from "react";
+import { Upload, X, Loader2, CheckCircle } from "lucide-react";
 
 interface ImageUploadProps {
-  value?: string
-  onUpload: (url: string) => void
-  label?: string
+  value?: string;
+  onUpload: (url: string) => void;
+  label?: string;
 }
 
-export function ImageUpload({ value, onUpload, label = 'Banner Gambar' }: ImageUploadProps) {
-  const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [preview, setPreview] = useState<string | null>(value || null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+export function ImageUpload({
+  value,
+  onUpload,
+  label = "Banner Gambar",
+}: ImageUploadProps) {
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(value || null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setError('Pilih file gambar yang valid')
-      return
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file");
+      return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setError('Ukuran file tidak boleh lebih dari 5MB')
-      return
+      setError("Ukuran file tidak boleh lebih dari 5MB");
+      return;
     }
 
-    setError(null)
-    setUploading(true)
+    setError(null);
+    setUploading(true);
 
     try {
       // Create preview
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
-        setPreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
+        setPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
 
       // Upload to Blob
-      const formData = new FormData()
-      formData.append('file', file)
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
+      const response = await fetch("/api/upload", {
+        method: "POST",
         body: formData,
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Upload gagal')
+        throw new Error("Upload failed");
       }
 
-      const data = await response.json()
-      onUpload(data.url)
+      const data = await response.json();
+      onUpload(data.url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Upload gagal')
-      setPreview(null)
+      setError(err instanceof Error ? err.message : "Upload failed");
+      setPreview(null);
     } finally {
-      setUploading(false)
+      setUploading(false);
       if (fileInputRef.current) {
-        fileInputRef.current.value = ''
+        fileInputRef.current.value = "";
       }
     }
   }
 
   function handleClear() {
-    setPreview(null)
-    onUpload('')
-    setError(null)
+    setPreview(null);
+    onUpload("");
+    setError(null);
   }
 
   return (
@@ -113,7 +117,7 @@ export function ImageUpload({ value, onUpload, label = 'Banner Gambar' }: ImageU
               className="flex items-center gap-1.5 bg-destructive/70 hover:bg-destructive text-destructive-foreground font-mono text-[9px] tracking-[1px] uppercase px-2.5 py-1.5 rounded-sm transition-colors disabled:opacity-50"
             >
               <X className="w-3 h-3" />
-              Hapus
+              Remove
             </button>
           </div>
 
@@ -141,15 +145,15 @@ export function ImageUpload({ value, onUpload, label = 'Banner Gambar' }: ImageU
               <p className="font-mono text-[10px] tracking-[1px] uppercase text-muted-foreground mb-0.5">
                 Klik atau drag gambar di sini
               </p>
-              <p className="text-xs text-muted-foreground/60">JPG, PNG, WebP • Max 5MB</p>
+              <p className="text-xs text-muted-foreground/60">
+                JPG, PNG, WebP • Max 5MB
+              </p>
             </>
           )}
         </button>
       )}
 
-      {error && (
-        <p className="text-xs text-destructive font-mono">{error}</p>
-      )}
+      {error && <p className="text-xs text-destructive font-mono">{error}</p>}
 
       <input
         ref={fileInputRef}
@@ -159,5 +163,5 @@ export function ImageUpload({ value, onUpload, label = 'Banner Gambar' }: ImageU
         className="hidden"
       />
     </div>
-  )
+  );
 }

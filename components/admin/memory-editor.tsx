@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { getMemories, addMemory, deleteMemory, updateMemory } from "@/lib/data";
 import { Memory } from "@/lib/types";
 import { ImageUpload } from "@/components/admin/image-upload";
-import { 
-  Camera, 
-  MapPin, 
-  Calendar, 
-  Plus, 
-  Trash2, 
-  Save, 
-  Loader2, 
-  Image as ImageIcon 
+import {
+  Camera,
+  MapPin,
+  Calendar,
+  Plus,
+  Trash2,
+  Save,
+  Loader2,
+  Image as ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
@@ -26,7 +26,7 @@ export function MemoryEditor() {
     image: "",
     location: "",
     caption: "",
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split("T")[0],
   });
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export function MemoryEditor() {
       const data = await getMemories();
       setMemories(data);
     } catch (err) {
-      toast.error("Gagal mengambil data kenangan");
+      toast.error("Failed to load memories");
     } finally {
       setLoading(false);
     }
@@ -49,22 +49,22 @@ export function MemoryEditor() {
 
   async function handleAdd() {
     if (!newItem.image) {
-      toast.error("Foto wajib diunggah");
+      toast.error("Photo is required");
       return;
     }
     setSaving(true);
     try {
       await addMemory(newItem);
-      toast.success("Kenangan baru ditambahkan");
+      toast.success("Memory added");
       setNewItem({
         image: "",
         location: "",
         caption: "",
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split("T")[0],
       });
       fetchMemories();
     } catch (err) {
-      toast.error("Gagal menambah kenangan");
+      toast.error("Failed to add memory");
     } finally {
       setSaving(false);
     }
@@ -74,12 +74,12 @@ export function MemoryEditor() {
     setDeletingId(id);
     try {
       await deleteMemory(id);
-      setMemories(memories.filter(m => m.id !== id));
-      toast.success("Kenangan dihapus");
+      setMemories(memories.filter((m) => m.id !== id));
+      toast.success("Memory deleted");
       fetchMemories();
     } catch (err) {
       console.error("Delete memory error:", err);
-      toast.error("Gagal menghapus");
+      toast.error("Failed to delete");
     } finally {
       setDeletingId(null);
       setShowDeleteConfirm(false);
@@ -105,15 +105,15 @@ export function MemoryEditor() {
       <section className="bg-card border border-border rounded-sm p-6 shadow-sm">
         <h3 className="font-serif text-xl font-bold mb-6 flex items-center gap-2">
           <Plus className="w-5 h-5 text-amber" />
-          Tambah Kenangan Baru
+          Add New Memory
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-8">
           <div className="space-y-2">
             <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block">
-              Foto Polaroid
+              Polaroid Photo
             </label>
-            <ImageUpload 
+            <ImageUpload
               value={newItem.image}
               onUpload={(url: string) => setNewItem({ ...newItem, image: url })}
             />
@@ -123,24 +123,28 @@ export function MemoryEditor() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3" /> Lokasi
+                  <MapPin className="w-3 h-3" /> Location
                 </label>
-                <input 
+                <input
                   type="text"
                   value={newItem.location}
-                  onChange={(e) => setNewItem({ ...newItem, location: e.target.value })}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, location: e.target.value })
+                  }
                   placeholder="Contoh: Yogyakarta, Indonesia"
                   className="w-full bg-input border border-border rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber"
                 />
               </div>
               <div className="space-y-1.5">
                 <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block flex items-center gap-1.5">
-                  <Calendar className="w-3 h-3" /> Tanggal
+                  <Calendar className="w-3 h-3" /> Date
                 </label>
-                <input 
+                <input
                   type="date"
                   value={newItem.date}
-                  onChange={(e) => setNewItem({ ...newItem, date: e.target.value })}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, date: e.target.value })
+                  }
                   className="w-full bg-input border border-border rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber"
                 />
               </div>
@@ -148,12 +152,14 @@ export function MemoryEditor() {
 
             <div className="space-y-1.5">
               <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block flex items-center gap-1.5">
-                <ImageIcon className="w-3 h-3" /> Cerita Singkat
+                <ImageIcon className="w-3 h-3" /> Short Story
               </label>
-              <textarea 
+              <textarea
                 value={newItem.caption}
-                onChange={(e) => setNewItem({ ...newItem, caption: e.target.value })}
-                placeholder="Tuliskan cerita singkat di balik foto ini..."
+                onChange={(e) =>
+                  setNewItem({ ...newItem, caption: e.target.value })
+                }
+                placeholder="Write a short story behind this photo..."
                 rows={3}
                 className="w-full bg-input border border-border rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber resize-none"
               />
@@ -164,8 +170,12 @@ export function MemoryEditor() {
               disabled={saving}
               className="bg-amber hover:bg-amber-light text-primary-foreground font-mono text-[10px] tracking-[2px] uppercase px-6 py-2.5 rounded-sm transition-all flex items-center gap-2 disabled:opacity-50"
             >
-              {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
-              Simpan Kenangan
+              {saving ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <Save className="w-3 h-3" />
+              )}
+              Save Memory
             </button>
           </div>
         </div>
@@ -175,15 +185,18 @@ export function MemoryEditor() {
       <section>
         <h3 className="font-serif text-xl font-bold mb-6 flex items-center gap-2">
           <Camera className="w-5 h-5 text-amber" />
-          Koleksi Kenangan ({memories.length})
+          Memory Collection ({memories.length})
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {memories.map((memory: Memory) => (
-            <div key={memory.id} className="bg-card border border-border rounded-sm overflow-hidden flex flex-col group">
+            <div
+              key={memory.id}
+              className="bg-card border border-border rounded-sm overflow-hidden flex flex-col group"
+            >
               <div className="aspect-square relative overflow-hidden bg-muted">
-                <img 
-                  src={memory.image} 
+                <img
+                  src={memory.image}
                   alt={memory.location}
                   className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105"
                 />
@@ -191,7 +204,7 @@ export function MemoryEditor() {
                   onClick={() => triggerDelete(memory.id)}
                   disabled={deletingId === memory.id}
                   className="absolute top-2 right-2 z-20 p-2 bg-destructive/90 hover:bg-destructive text-white rounded-sm opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity disabled:opacity-50"
-                  title="Hapus Kenangan"
+                  title="Delete Memory"
                 >
                   {deletingId === memory.id ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -206,7 +219,12 @@ export function MemoryEditor() {
                     <MapPin className="w-2.5 h-2.5" /> {memory.location}
                   </span>
                   <span className="font-mono text-[9px] text-muted-foreground uppercase flex items-center gap-1">
-                    <Calendar className="w-2.5 h-2.5" /> {new Date(memory.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    <Calendar className="w-2.5 h-2.5" />{" "}
+                    {new Date(memory.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </span>
                 </div>
                 <p className="text-sm italic font-serif leading-relaxed opacity-80 decoration-amber/30 decoration-wavy underline-offset-4 line-clamp-3">
@@ -219,7 +237,7 @@ export function MemoryEditor() {
           {memories.length === 0 && (
             <div className="col-span-full py-20 text-center border-2 border-dashed border-border rounded-sm">
               <p className="font-mono text-xs text-muted-foreground uppercase tracking-[2px]">
-                Belum ada kenangan yang tersimpan.
+                No memories saved yet.
               </p>
             </div>
           )}
@@ -234,9 +252,9 @@ export function MemoryEditor() {
         }}
         onConfirm={() => targetId && handleDelete(targetId)}
         loading={!!deletingId}
-        title="Hapus Kenangan"
-        message="Anda akan menghapus frame kenangan ini. Foto dan cerita yang tersimpan akan hilang selamanya."
-        confirmText="Ya, Hapus"
+        title="Delete Memory"
+        message="This memory frame will be deleted. The photo and story will be lost forever."
+        confirmText="Yes, Delete"
         variant="danger"
       />
     </div>

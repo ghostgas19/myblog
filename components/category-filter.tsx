@@ -14,16 +14,16 @@ const POSTS_PER_PAGE = 6;
 const FIRST_PAGE_LIMIT = 5;
 
 export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
-  const [active, setActive] = useState("Semua");
+  const [active, setActive] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const topRef = useRef<HTMLDivElement>(null);
 
-  const allCategories = ["Semua", ...categories];
+  const allCategories = ["All", ...categories];
 
   // 1. Filter by category
   let filtered =
-    active === "Semua" ? posts : posts.filter((p) => p.category === active);
+    active === "All" ? posts : posts.filter((p) => p.category === active);
 
   // 2. Filter by search query
   if (searchQuery.trim()) {
@@ -31,28 +31,33 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
     filtered = filtered.filter(
       (p) =>
         p.title.toLowerCase().includes(query) ||
-        p.excerpt.toLowerCase().includes(query)
+        p.excerpt.toLowerCase().includes(query),
     );
   }
 
   // Page 1 shows 5 posts (1 featured + 4 regular), rest show 6
   // Featured only if: Category is 'Semua' AND no search query AND page is 1
-  const isFeaturedPage = page === 1 && active === "Semua" && !searchQuery.trim();
+  const isFeaturedPage = page === 1 && active === "All" && !searchQuery.trim();
   const pageLimit = isFeaturedPage ? FIRST_PAGE_LIMIT : POSTS_PER_PAGE;
 
   // Calculate total pages accounting for the first-page difference
-  const totalPages = filtered.length <= (isFeaturedPage ? FIRST_PAGE_LIMIT : POSTS_PER_PAGE)
-    ? 1
-    : isFeaturedPage 
-      ? 1 + Math.ceil((filtered.length - FIRST_PAGE_LIMIT) / POSTS_PER_PAGE)
-      : Math.ceil(filtered.length / POSTS_PER_PAGE);
+  const totalPages =
+    filtered.length <= (isFeaturedPage ? FIRST_PAGE_LIMIT : POSTS_PER_PAGE)
+      ? 1
+      : isFeaturedPage
+        ? 1 + Math.ceil((filtered.length - FIRST_PAGE_LIMIT) / POSTS_PER_PAGE)
+        : Math.ceil(filtered.length / POSTS_PER_PAGE);
 
   // Slice the right posts for current page
-  const paginated = page === 1
-    ? filtered.slice(0, pageLimit)
-    : isFeaturedPage
-      ? filtered.slice(FIRST_PAGE_LIMIT + (page - 2) * POSTS_PER_PAGE, FIRST_PAGE_LIMIT + (page - 1) * POSTS_PER_PAGE)
-      : filtered.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+  const paginated =
+    page === 1
+      ? filtered.slice(0, pageLimit)
+      : isFeaturedPage
+        ? filtered.slice(
+            FIRST_PAGE_LIMIT + (page - 2) * POSTS_PER_PAGE,
+            FIRST_PAGE_LIMIT + (page - 1) * POSTS_PER_PAGE,
+          )
+        : filtered.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 
   function handleCategoryChange(cat: string) {
     setActive(cat);
@@ -85,14 +90,14 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
             type="text"
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Cari tulisan..."
+            placeholder="Search posts..."
             className="w-full bg-card border border-border rounded-sm pl-10 pr-10 py-2.5 font-mono text-[11px] tracking-[1px] uppercase placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber shadow-[2px_2px_0_theme(colors.border)] hover:shadow-[3px_3px_0_theme(colors.maroon-warm)] focus:shadow-[4px_4px_0_theme(colors.amber)] transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => handleSearchChange("")}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-amber transition-colors"
-              aria-label="Hapus pencarian"
+              aria-label="Clear search"
             >
               <X className="w-4 h-4" />
             </button>
@@ -100,7 +105,7 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
         </div>
 
         {/* Nav Tabs */}
-        <nav className="flex gap-2 flex-wrap" aria-label="Filter kategori">
+        <nav className="flex gap-2 flex-wrap" aria-label="Filter by category">
           {allCategories.map((cat) => (
             <button
               key={cat}
@@ -125,12 +130,12 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
             key={post.id}
             post={post}
             index={i}
-            featured={i === 0 && active === "Semua" && page === 1}
+            featured={i === 0 && active === "All" && page === 1}
           />
         ))}
         {filtered.length === 0 && (
           <p className="col-span-2 text-center text-muted-foreground font-mono text-sm py-12 tracking-widest uppercase">
-            Tidak ada tulisan di kategori ini.
+            No posts in this category.
           </p>
         )}
       </div>
@@ -140,7 +145,20 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
         <div className="mt-12 flex flex-col items-center gap-4">
           {/* Film counter label */}
           <div className="font-mono text-[9px] tracking-[3px] uppercase text-muted-foreground">
-            Frame {paginated.length > 0 ? (page === 1 ? 1 : FIRST_PAGE_LIMIT + (page - 2) * POSTS_PER_PAGE + 1) : 0}–{page === 1 ? Math.min(FIRST_PAGE_LIMIT, filtered.length) : Math.min(FIRST_PAGE_LIMIT + (page - 1) * POSTS_PER_PAGE, filtered.length)} dari {filtered.length} tulisan
+            Frame{" "}
+            {paginated.length > 0
+              ? page === 1
+                ? 1
+                : FIRST_PAGE_LIMIT + (page - 2) * POSTS_PER_PAGE + 1
+              : 0}
+            –
+            {page === 1
+              ? Math.min(FIRST_PAGE_LIMIT, filtered.length)
+              : Math.min(
+                  FIRST_PAGE_LIMIT + (page - 1) * POSTS_PER_PAGE,
+                  filtered.length,
+                )}{" "}
+            of {filtered.length} posts
           </div>
 
           {/* Pagination strip */}
@@ -150,7 +168,7 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
               onClick={() => handlePageChange(page - 1)}
               disabled={page === 1}
               className="flex items-center gap-1 px-3 py-2.5 bg-film-strip text-film-yellow font-mono text-[10px] tracking-[2px] uppercase hover:bg-maroon-mid transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-r border-border"
-              aria-label="Halaman sebelumnya"
+              aria-label="Previous page"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Prev</span>
@@ -198,7 +216,7 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
               onClick={() => handlePageChange(page + 1)}
               disabled={page === totalPages}
               className="flex items-center gap-1 px-3 py-2.5 bg-film-strip text-film-yellow font-mono text-[10px] tracking-[2px] uppercase hover:bg-maroon-mid transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Halaman berikutnya"
+              aria-label="Next page"
             >
               <span className="hidden sm:inline">Next</span>
               <ChevronRight className="w-3.5 h-3.5" />

@@ -1,47 +1,47 @@
-'use client'
+"use client";
 
-import { useState, useTransition } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { FilmStrip } from '@/components/film-strip'
-import { Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react'
+import { useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FilmStrip } from "@/components/film-strip";
+import { Eye, EyeOff, LogIn, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [pending, startTransition] = useTransition()
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [pending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
-    const formData = new FormData(e.currentTarget)
+    e.preventDefault();
+    setError(null);
+    const formData = new FormData(e.currentTarget);
 
     startTransition(async () => {
       try {
-        const response = await fetch('/api/admin/login', {
-          method: 'POST',
+        const response = await fetch("/api/admin/login", {
+          method: "POST",
           body: formData,
-        })
+        });
 
-        const data = await response.json()
+        const data = await response.json();
 
         if (!response.ok || data.error) {
-          setError(data.error ?? 'Login gagal, coba lagi.')
-          return
+          setError(data.error ?? "Login failed, please try again.");
+          return;
         }
 
-        const from = searchParams.get('from') || '/admin'
-        window.location.href = from
+        const from = searchParams.get("from") || "/admin";
+        window.location.href = from;
       } catch (err) {
-        setError('Terjadi kesalahan saat login.')
+        setError("An error occurred during login.");
       }
-    })
+    });
   }
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <FilmStrip label="Admin · Ruang Cerita · Restricted" />
+      <FilmStrip label="Admin · Movies for Two · Restricted" />
 
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
@@ -51,7 +51,7 @@ export default function LoginPage() {
               ▣ Admin Access
             </div>
             <h1 className="font-serif text-3xl font-bold text-foreground">
-              Ruang <em className="italic text-amber-light">Cerita</em>
+              Movies <em className="italic text-amber-light">for Two</em>
             </h1>
             <p className="text-xs text-muted-foreground font-mono tracking-[2px] uppercase mt-2">
               Dashboard Login
@@ -65,7 +65,7 @@ export default function LoginPage() {
               className="h-4 bg-film-strip"
               style={{
                 backgroundImage:
-                  'repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.06) 6px, rgba(255,255,255,0.06) 12px)',
+                  "repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.06) 6px, rgba(255,255,255,0.06) 12px)",
               }}
             />
 
@@ -80,7 +80,10 @@ export default function LoginPage() {
 
               {/* Email */}
               <div className="space-y-1.5">
-                <label htmlFor="email" className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block">
+                <label
+                  htmlFor="email"
+                  className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block"
+                >
                   Email
                 </label>
                 <input
@@ -96,14 +99,17 @@ export default function LoginPage() {
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label htmlFor="password" className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block">
+                <label
+                  htmlFor="password"
+                  className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground block"
+                >
                   Password
                 </label>
                 <div className="relative">
                   <input
                     id="password"
                     name="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     required
                     placeholder="••••••••"
                     className="w-full bg-input border border-border rounded-sm px-3 py-2.5 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
@@ -112,14 +118,18 @@ export default function LoginPage() {
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
-
-
 
               {/* Submit */}
               <button
@@ -128,11 +138,11 @@ export default function LoginPage() {
                 className="w-full flex items-center justify-center gap-2 bg-amber hover:bg-amber-light text-primary-foreground font-mono text-[10px] tracking-[3px] uppercase px-4 py-3 rounded-sm transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {pending ? (
-                  <span className="animate-pulse">Masuk...</span>
+                  <span className="animate-pulse">Signing in...</span>
                 ) : (
                   <>
                     <LogIn className="w-4 h-4" />
-                    Masuk
+                    Sign In
                   </>
                 )}
               </button>
@@ -140,12 +150,15 @@ export default function LoginPage() {
           </div>
 
           <p className="text-center text-[10px] font-mono tracking-[2px] uppercase text-muted-foreground mt-6">
-            <a href="/" className="hover:text-amber transition-colors duration-200">
-              ← Kembali ke Blog
+            <a
+              href="/"
+              className="hover:text-amber transition-colors duration-200"
+            >
+              ← Back to Blog
             </a>
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -14,7 +14,7 @@ async function MemoriesGrid() {
         <div className="inline-block bg-muted/30 border border-border rounded-sm px-8 py-10">
           <Camera className="w-12 h-12 mx-auto mb-4 text-muted-foreground/40" />
           <p className="font-mono text-xs text-muted-foreground uppercase tracking-[3px]">
-            Belum ada kenangan yang dibagikan.
+            No memories shared yet.
           </p>
         </div>
       </div>
@@ -24,7 +24,7 @@ async function MemoriesGrid() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
       {memories.map((memory, i) => (
-        <div 
+        <div
           key={memory.id}
           className={`group bg-white p-3 pb-12 shadow-[5px_10px_25px_rgba(0,0,0,0.3)] relative transition-all duration-500 hover:scale-[1.03] hover:z-20 ${
             i % 3 === 0 ? "-rotate-2" : i % 3 === 1 ? "rotate-1" : "rotate-2"
@@ -32,10 +32,10 @@ async function MemoriesGrid() {
         >
           {/* Tape effect */}
           <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-5 bg-film-yellow/30 border border-film-yellow/20 z-10" />
-          
+
           <div className="aspect-square overflow-hidden bg-muted relative">
-            <img 
-              src={memory.image} 
+            <img
+              src={memory.image}
               alt={memory.location}
               className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-1000"
             />
@@ -50,7 +50,10 @@ async function MemoriesGrid() {
               </div>
               <div className="flex items-center gap-1.5 text-gray-400 font-mono text-[9px] uppercase tracking-tighter">
                 <Calendar className="w-3 h-3" />
-                {new Date(memory.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'short' })}
+                {new Date(memory.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                })}
               </div>
             </div>
             <p className="font-serif italic text-base text-gray-800 leading-relaxed text-balance">
@@ -69,7 +72,7 @@ async function MemoriesGrid() {
 export default function KenanganPage() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
-      <FilmStrip label="Ruang Cerita · Arsip Kenangan · 135mm" />
+      <FilmStrip label="Movies for Two · Memory Archive · 135mm" />
 
       <main className="max-w-6xl mx-auto px-6">
         <header className="text-center pt-20 pb-16">
@@ -77,30 +80,39 @@ export default function KenanganPage() {
             ▣ Koleksi Klip Foto · Memory Archive
           </div>
           <h1 className="font-serif text-5xl md:text-7xl font-bold leading-none tracking-tight text-foreground [text-shadow:3px_3px_0_theme(colors.maroon-deep)]">
-            Kenangan <em className="italic text-amber-light text-4xl md:text-6xl">Abadi</em>
+            Memories{" "}
+            <em className="italic text-amber-light text-4xl md:text-6xl">
+              Eternal
+            </em>
           </h1>
           <p className="font-sans italic text-base text-maroon-light mt-4 max-w-xl mx-auto tracking-wide">
-            Potongan momen yang tertangkap kamera, lokasi yang pernah disinggahi, dan cerita kecil yang tersisa di baliknya.
+            Fragments of moments captured on camera, places once visited, and
+            small stories left behind.
           </p>
         </header>
 
-        <Suspense fallback={
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 animate-pulse">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="bg-white p-3 pb-12 shadow-md aspect-[4/5] opacity-50" />
-            ))}
-          </div>
-        }>
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 animate-pulse">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-white p-3 pb-12 shadow-md aspect-[4/5] opacity-50"
+                />
+              ))}
+            </div>
+          }
+        >
           <MemoriesGrid />
         </Suspense>
 
         {/* Home Link */}
         <div className="mt-24 text-center">
-          <a 
-            href="/" 
+          <a
+            href="/"
             className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[3px] uppercase text-muted-foreground hover:text-amber transition-colors"
           >
-            ← Kembali ke Beranda
+            ← Back to Home
           </a>
         </div>
       </main>
