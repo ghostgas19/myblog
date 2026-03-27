@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import type { Post } from "@/lib/types";
 import { PostCard } from "./post-card";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, X } from "lucide-react";
 
 interface CategoryFilterProps {
   posts: Post[];
@@ -15,31 +15,54 @@ const FIRST_PAGE_LIMIT = 5;
 
 export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
   const [active, setActive] = useState("Semua");
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const topRef = useRef<HTMLDivElement>(null);
 
   const allCategories = ["Semua", ...categories];
 
-  const filtered =
+  // 1. Filter by category
+  let filtered =
     active === "Semua" ? posts : posts.filter((p) => p.category === active);
 
+  // 2. Filter by search query
+  if (searchQuery.trim()) {
+    const query = searchQuery.toLowerCase().trim();
+    filtered = filtered.filter(
+      (p) =>
+        p.title.toLowerCase().includes(query) ||
+        p.excerpt.toLowerCase().includes(query)
+    );
+  }
+
   // Page 1 shows 5 posts (1 featured + 4 regular), rest show 6
-  const isFeaturedPage = page === 1 && active === "Semua";
+  // Featured only if: Category is 'Semua' AND no search query AND page is 1
+  const isFeaturedPage = page === 1 && active === "Semua" && !searchQuery.trim();
   const pageLimit = isFeaturedPage ? FIRST_PAGE_LIMIT : POSTS_PER_PAGE;
 
   // Calculate total pages accounting for the first-page difference
-  const totalPages = filtered.length <= FIRST_PAGE_LIMIT
+  const totalPages = filtered.length <= (isFeaturedPage ? FIRST_PAGE_LIMIT : POSTS_PER_PAGE)
     ? 1
-    : 1 + Math.ceil((filtered.length - FIRST_PAGE_LIMIT) / POSTS_PER_PAGE);
+    : isFeaturedPage 
+      ? 1 + Math.ceil((filtered.length - FIRST_PAGE_LIMIT) / POSTS_PER_PAGE)
+      : Math.ceil(filtered.length / POSTS_PER_PAGE);
 
   // Slice the right posts for current page
   const paginated = page === 1
     ? filtered.slice(0, pageLimit)
-    : filtered.slice(FIRST_PAGE_LIMIT + (page - 2) * POSTS_PER_PAGE, FIRST_PAGE_LIMIT + (page - 1) * POSTS_PER_PAGE);
+    : isFeaturedPage
+      ? filtered.slice(FIRST_PAGE_LIMIT + (page - 2) * POSTS_PER_PAGE, FIRST_PAGE_LIMIT + (page - 1) * POSTS_PER_PAGE)
+      : filtered.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
 
   function handleCategoryChange(cat: string) {
     setActive(cat);
+    setSearchQuery(""); // Clear search when changing category
     setPage(1);
+  }
+
+  function handleSearchChange(val: string) {
+    setSearchQuery(val);
+    setPage(1); // Reset to page 1 on search
   }
 
   function handlePageChange(next: number) {
@@ -51,23 +74,49 @@ export function CategoryFilter({ posts, categories }: CategoryFilterProps) {
     <>
       <div ref={topRef} />
 
-      {/* Nav Tabs */}
-      <nav className="flex gap-2 flex-wrap mb-10" aria-label="Filter kategori">
-        {allCategories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => handleCategoryChange(cat)}
-            className={`font-mono text-[11px] tracking-[2px] uppercase px-4 py-2 border rounded-sm transition-all duration-200 cursor-pointer ${
-              active === cat
-                ? "bg-maroon-warm border-maroon-warm text-cream"
-                : "border-maroon-warm text-maroon-light hover:bg-maroon-warm hover:text-cream"
-            }`}
-            aria-pressed={active === cat}
-          >
-            {cat}
-          </button>
-        ))}
-      </nav>
+      {/* Search and Filter Section */}
+      <div className="space-y-6 mb-10">
+        {/* Search Bar */}
+        <div className="relative group max-w-md">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-amber transition-colors">
+            <Search className="w-4 h-4" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Cari tulisan..."
+            className="w-full bg-card border border-border rounded-sm pl-10 pr-10 py-2.5 font-mono text-[11px] tracking-[1px] uppercase placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber shadow-[2px_2px_0_theme(colors.border)] hover:shadow-[3px_3px_0_theme(colors.maroon-warm)] focus:shadow-[4px_4px_0_theme(colors.amber)] transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => handleSearchChange("")}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-amber transition-colors"
+              aria-label="Hapus pencarian"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Nav Tabs */}
+        <nav className="flex gap-2 flex-wrap" aria-label="Filter kategori">
+          {allCategories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className={`font-mono text-[11px] tracking-[2px] uppercase px-4 py-2 border rounded-sm transition-all duration-200 cursor-pointer ${
+                active === cat
+                  ? "bg-maroon-warm border-maroon-warm text-cream"
+                  : "border-maroon-warm text-maroon-light hover:bg-maroon-warm hover:text-cream"
+              }`}
+              aria-pressed={active === cat}
+            >
+              {cat}
+            </button>
+          ))}
+        </nav>
+      </div>
 
       {/* Posts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
