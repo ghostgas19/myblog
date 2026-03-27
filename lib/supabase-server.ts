@@ -1,17 +1,34 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Server-side Supabase client using service role key (only on server!)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !serviceRoleKey) {
-  console.warn(
-    "Supabase env vars missing: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY. Data operations will fail.",
+// Coba service role key dulu, fallback ke publishable key
+const supabaseKey =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ??
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ??
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error(
+    [
+      "",
+      "⚠️  Supabase belum dikonfigurasi!",
+      "Tambahkan variabel berikut ke file .env.local:",
+      "",
+      "  NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co",
+      "",
+      "  # Pilih salah satu (service role key lebih direkomendasikan):",
+      "  SUPABASE_SERVICE_ROLE_KEY=eyJhbG...   ← dari Settings > API > service_role",
+      "  # atau",
+      "  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=sb_publishable_...",
+      "",
+    ].join("\n"),
   );
 }
 
-export const supabase = createClient(supabaseUrl ?? "", serviceRoleKey ?? "", {
+export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     persistSession: false,
+    autoRefreshToken: false,
   },
 });

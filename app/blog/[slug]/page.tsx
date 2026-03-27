@@ -44,7 +44,7 @@ export default async function PostPage({ params }: Props) {
         </nav>
 
         {/* Cover */}
-        <div className="w-full h-48 md:h-64 flex items-center justify-center text-7xl bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber rounded-sm mb-8 relative overflow-hidden">
+        <div className="w-full h-48 md:h-64 flex items-center justify-center bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber rounded-sm mb-8 relative overflow-hidden">
           {post.bannerUrl ? (
             <img
               src={post.bannerUrl}
@@ -59,7 +59,6 @@ export default async function PostPage({ params }: Props) {
                 'repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.04) 6px, rgba(255,255,255,0.04) 12px)',
             }}
           />
-          <span className="relative z-10">{post.coverEmoji}</span>
         </div>
 
         {/* Article header */}

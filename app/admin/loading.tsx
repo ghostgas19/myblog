@@ -8,7 +8,7 @@ export default function AdminLoading() {
         </div>
         <div className="h-9 w-32 bg-muted rounded-sm animate-pulse" />
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="h-20 bg-card border border-border rounded-sm animate-pulse" />
         ))}

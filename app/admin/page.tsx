@@ -35,35 +35,36 @@ async function PostsTable() {
   const posts = await getPosts()
 
   return (
-    <div className="bg-card border border-border rounded-sm overflow-hidden">
-      {/* Film frame top */}
-      <div
-        className="h-3 bg-film-strip"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.06) 6px, rgba(255,255,255,0.06) 12px)',
-        }}
-      />
+    <div className="bg-card border border-border rounded-sm overflow-x-auto">
+      <div className="min-w-[520px]">
+        {/* Film frame top */}
+        <div
+          className="h-3 bg-film-strip"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.06) 6px, rgba(255,255,255,0.06) 12px)',
+          }}
+        />
 
-      {/* Table header */}
-      <div className="grid grid-cols-[1fr_100px_120px_80px] gap-4 px-5 py-3 border-b border-border font-mono text-[9px] tracking-[2px] uppercase text-muted-foreground">
-        <span>Judul</span>
-        <span>Kategori</span>
-        <span>Tanggal</span>
-        <span className="text-right">Aksi</span>
-      </div>
-
-      {/* Rows */}
-      {posts.length === 0 ? (
-        <div className="px-5 py-12 text-center text-muted-foreground font-mono text-xs tracking-widest uppercase">
-          Belum ada tulisan.
+        {/* Table header */}
+        <div className="grid grid-cols-[1fr_100px_120px_80px] gap-4 px-5 py-3 border-b border-border font-mono text-[9px] tracking-[2px] uppercase text-muted-foreground">
+          <span>Judul</span>
+          <span>Kategori</span>
+          <span>Tanggal</span>
+          <span className="text-right">Aksi</span>
         </div>
-      ) : (
-        posts.map((post) => (
-          <div
-            key={post.id}
-            className="grid grid-cols-[1fr_100px_120px_80px] gap-4 px-5 py-4 border-b border-border/50 items-center hover:bg-muted/20 transition-colors duration-150 last:border-0"
-          >
+
+        {/* Rows */}
+        {posts.length === 0 ? (
+          <div className="px-5 py-12 text-center text-muted-foreground font-mono text-xs tracking-widest uppercase">
+            Belum ada tulisan.
+          </div>
+        ) : (
+          posts.map((post) => (
+            <div
+              key={post.id}
+              className="grid grid-cols-[1fr_100px_120px_80px] gap-4 px-5 py-4 border-b border-border/50 items-center hover:bg-muted/20 transition-colors duration-150 last:border-0"
+            >
             {/* Title + status */}
             <div className="min-w-0">
               <p className="font-serif text-sm font-semibold text-foreground truncate leading-tight">
@@ -117,6 +118,7 @@ async function PostsTable() {
           </div>
         ))
       )}
+      </div>
     </div>
   )
 }
@@ -166,7 +168,7 @@ export default function AdminDashboard() {
       {/* Stats */}
       <Suspense
         fallback={
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="h-20 bg-card border border-border rounded-sm animate-pulse" />
             ))}
