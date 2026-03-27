@@ -60,7 +60,7 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
         </h2>
 
         <p className="text-sm text-cream-dark leading-relaxed opacity-85 flex-1 line-clamp-3">
-          {post.excerpt}
+          {post.excerpt.replace(/<[^>]*>?/gm, '')}
         </p>
       </div>
 

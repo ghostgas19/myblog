@@ -44,31 +44,31 @@ export default function HomePage() {
         >
           {[
             {
-              emoji: "☕",
+              img: "/polaroid-blog.png",
               label: "Blog",
               href: "/",
               bg: "from-amber-700 to-amber-900",
             },
             {
-              emoji: "🌿",
+              img: "/polaroid-profile.png",
               label: "Profil",
               href: "/profil",
               bg: "from-maroon-mid to-maroon-deep",
             },
             { 
-              emoji: "📖", 
+              img: "/polaroid-recs.png", 
               label: "Rekomendasi", 
               href: "/rekomendasi",
               bg: "from-amber to-maroon-mid" 
             },
             {
-              emoji: "🎞️",
+              img: "/polaroid-inbox.png",
               label: "Kotak Surat",
               href: "/kotak-surat",
               bg: "from-maroon-deep to-maroon-warm",
             },
 
-          ].map(({ emoji, label, href, bg }, i) => (
+          ].map(({ img, label, href, bg }, i) => (
             <Link
               key={label}
               href={href}
@@ -85,15 +85,24 @@ export default function HomePage() {
               {/* tape */}
               <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-10 h-4 bg-film-yellow/40 border border-film-yellow/30 group-hover:bg-film-yellow/60 transition-colors" />
               <div
-                className={`w-full h-[90px] flex items-center justify-center text-3xl bg-gradient-to-br ${bg}`}
+                className={`w-full h-[90px] flex items-center justify-center bg-muted overflow-hidden relative`}
               >
-                {emoji}
+                {img ? (
+                   <img 
+                     src={img} 
+                     alt={label} 
+                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
+                   />
+                ) : (
+                  <div className={`w-full h-full bg-gradient-to-br ${bg}`} />
+                )}
               </div>
-              <div className="font-mono text-[9px] text-gray-600 text-center mt-1.5 tracking-wide group-hover:text-amber transition-colors">
+              <div className="font-mono text-[12px] font-bold text-gray-700 text-center mt-2 tracking-wide group-hover:text-amber transition-colors">
                 {label}
               </div>
             </Link>
           ))}
+
         </div>
 
         {/* Divider */}

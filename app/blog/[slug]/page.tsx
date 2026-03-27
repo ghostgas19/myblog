@@ -83,25 +83,17 @@ export default async function PostPage({ params }: Props) {
         </header>
 
         {/* Article body */}
-        <article className="font-sans text-[0.96rem] leading-[1.85] text-cream-dark space-y-5">
-          {paragraphs.map((para, i) => {
-            // Bold text rendering: replace **text** with <strong>text</strong>
-            const parts = para.split(/\*\*(.*?)\*\*/g)
-            return (
-              <p key={i}>
-                {parts.map((part, j) =>
-                  j % 2 === 1 ? (
-                    <strong key={j} className="text-foreground font-semibold">
-                      {part}
-                    </strong>
-                  ) : (
-                    part
-                  )
-                )}
-              </p>
-            )
-          })}
-        </article>
+        <article 
+          className="prose prose-invert prose-amber max-w-none font-sans text-[0.96rem] leading-[1.85] text-cream-dark 
+                     prose-headings:font-serif prose-headings:text-foreground prose-headings:font-bold
+                     prose-p:mb-5 prose-p:leading-relaxed
+                     prose-strong:text-foreground prose-strong:font-semibold
+                     prose-a:text-amber prose-a:no-underline hover:prose-a:underline
+                     prose-blockquote:border-l-amber prose-blockquote:bg-maroon-mid/20 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-sm prose-blockquote:italic
+                     prose-li:marker:text-amber"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+
 
         {/* Footer divider */}
         <div className="flex items-center gap-3 my-10" aria-hidden="true">

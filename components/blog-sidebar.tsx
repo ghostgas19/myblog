@@ -1,3 +1,5 @@
+import { getProfile } from "@/lib/data";
+
 interface BlogSidebarProps {
   postCount: number
 }
@@ -22,21 +24,31 @@ function SidebarBlock({ children, title }: { children: React.ReactNode; title: s
   )
 }
 
-export function BlogSidebar({ postCount }: BlogSidebarProps) {
+export async function BlogSidebar({ postCount }: BlogSidebarProps) {
+  const profile = await getProfile();
+  
   return (
     <aside aria-label="Sidebar blog">
       <SidebarBlock title="Tentang Penulis">
         <div className="flex flex-col items-center">
-          <div className="w-14 h-14 rounded-full border-2 border-amber bg-maroon-deep flex items-center justify-center text-2xl mb-2.5">
-            👤
+          <div className="w-16 h-16 rounded-full border-2 border-amber bg-maroon-deep overflow-hidden group mb-2.5">
+            {profile.avatar ? (
+              <img 
+                src={profile.avatar} 
+                alt={profile.name} 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-2xl">👤</div>
+            )}
           </div>
-          <div className="font-serif text-base text-foreground text-center">GhostGas</div>
-          <p className="text-[0.75rem] leading-relaxed text-cream-dark text-center opacity-80 mt-1.5">
-            Penulis amatir, penggemar kopi sore, dan seseorang yang masih mencari cara terbaik untuk
-            membuat hidup terasa bermakna — satu tulisan per waktu.
+          <div className="font-serif text-base text-foreground text-center">{profile.name}</div>
+          <p className="text-[0.75rem] leading-relaxed text-cream-dark text-center opacity-80 mt-1.5 line-clamp-4">
+            {profile.bio}
           </p>
         </div>
       </SidebarBlock>
+
 
       <SidebarBlock title="⬛ Film Counter">
         <div className="text-center">

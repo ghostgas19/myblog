@@ -555,8 +555,8 @@ export function PostEditor({
                     /blog/{slug || "..."}
                   </p>
                   <p className="text-xs text-muted-foreground italic line-clamp-2 mt-1">
-                    {content.slice(0, 100).replace(/\*\*/g, "")}
-                    {content.length > 100 ? "..." : ""}
+                    {content.replace(/<[^>]*>?/gm, '').slice(0, 100)}
+                    {content.replace(/<[^>]*>?/gm, '').length > 100 ? "..." : ""}
                   </p>
                 </>
               ) : (
