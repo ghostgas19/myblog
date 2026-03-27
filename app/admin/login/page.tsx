@@ -119,10 +119,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Hint */}
-              <p className="font-mono text-[9px] tracking-[1px] text-muted-foreground/60 text-center">
-                Demo: admin@ruangcerita.id / password
-              </p>
+
 
               {/* Submit */}
               <button
