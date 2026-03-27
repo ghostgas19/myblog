@@ -33,6 +33,11 @@ export default function HomePageWithIntro({
     setShowIntro(false);
   };
 
+  // Filter categories to only show those that have at least one post
+  const categoriesWithPosts = categories.filter((cat) =>
+    posts.some((p) => p.category === cat)
+  );
+  
   if (showIntro) {
     return <IntroScene onComplete={handleIntroComplete} />;
   }
@@ -139,7 +144,7 @@ export default function HomePageWithIntro({
         {/* Main layout: posts + sidebar */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-10 items-start">
           <main>
-            <CategoryFilter posts={posts} categories={categories} />
+            <CategoryFilter posts={posts} categories={categoriesWithPosts} />
 
             {/* Quote block */}
             <blockquote className="border-l-4 border-amber px-6 py-5 my-10 bg-maroon-mid/35 rounded-r-sm">
@@ -155,7 +160,7 @@ export default function HomePageWithIntro({
           </main>
 
           <Suspense fallback={<div className="animate-pulse bg-muted h-64 w-full rounded-sm" />}>
-            <BlogSidebar postCount={posts.length} initialProfile={profile} />
+            <BlogSidebar postCount={posts.length} initialProfile={profile} categories={categoriesWithPosts} />
           </Suspense>
         </div>
 

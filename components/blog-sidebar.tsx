@@ -3,9 +3,8 @@ import { getProfile } from "@/lib/data";
 interface BlogSidebarProps {
   postCount: number;
   initialProfile: any;
+  categories: string[];
 }
-
-const TAGS = ['Refleksi', 'Perjalanan', 'Rekomendasi', 'Kehidupan', 'Kamera', 'Harian', 'Semua']
 
 function SidebarBlock({ children, title }: { children: React.ReactNode; title: string }) {
   return (
@@ -25,8 +24,11 @@ function SidebarBlock({ children, title }: { children: React.ReactNode; title: s
   )
 }
 
-export function BlogSidebar({ postCount, initialProfile }: BlogSidebarProps) {
+export function BlogSidebar({ postCount, initialProfile, categories }: BlogSidebarProps) {
   const profile = initialProfile;
+  
+  // Also include 'Semua' if needed, but let's follow the categories passed
+  const tags = categories.length > 0 ? [...categories, 'Semua'] : ['Semua'];
   
   return (
     <aside aria-label="Sidebar blog">
@@ -64,7 +66,7 @@ export function BlogSidebar({ postCount, initialProfile }: BlogSidebarProps) {
 
       <SidebarBlock title="Topik">
         <div className="flex flex-wrap gap-1.5">
-          {TAGS.map((tag) => (
+          {tags.map((tag) => (
             <span
               key={tag}
               className="font-mono text-[9px] tracking-[1px] uppercase px-2.5 py-1 border border-maroon-warm rounded-sm text-maroon-light hover:bg-maroon-warm hover:text-cream cursor-pointer transition-all duration-200"
