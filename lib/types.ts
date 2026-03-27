@@ -21,3 +21,17 @@ export interface Message {
   sender_name: string;
   created_at: string;
 }
+
+export interface Profile {
+  name: string;
+  bio: string;
+  role: string;
+  avatar: string;
+}
+
+export interface Recommendation {
+  type: string;
+  title: string;
+  artist: string;
+  emoji: string;
+}

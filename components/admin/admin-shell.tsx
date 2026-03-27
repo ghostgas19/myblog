@@ -10,7 +10,9 @@ import {
   Menu,
   X,
   Mail,
+  Settings,
 } from "lucide-react";
+
 
 
 import { cn } from "@/lib/utils";
@@ -128,6 +130,13 @@ function AdminSidebarContent({
           label="Pesan Masuk"
           onClick={onNavigate}
         />
+        <NavItem
+          href="/admin/settings"
+          icon={<Settings className="w-4 h-4" />}
+          label="Pengaturan"
+          onClick={onNavigate}
+        />
+
 
       </nav>
 

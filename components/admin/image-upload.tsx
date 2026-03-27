@@ -87,12 +87,12 @@ export function ImageUpload({ value, onUpload, label = 'Banner Gambar' }: ImageU
             alt="Preview"
             className="w-full h-40 object-cover"
           />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200 flex items-center justify-center gap-2">
+          <div className="absolute inset-0 bg-black/40 md:bg-black/0 md:group-hover:bg-black/40 transition-colors duration-200 flex items-center justify-center gap-2">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="hidden group-hover:flex items-center gap-1.5 bg-amber hover:bg-amber-light text-primary-foreground font-mono text-[9px] tracking-[1px] uppercase px-2.5 py-1.5 rounded-sm transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-amber hover:bg-amber-light text-primary-foreground font-mono text-[9px] tracking-[1px] uppercase px-2.5 py-1.5 rounded-sm transition-colors disabled:opacity-50"
             >
               {uploading ? (
                 <>
@@ -110,12 +110,13 @@ export function ImageUpload({ value, onUpload, label = 'Banner Gambar' }: ImageU
               type="button"
               onClick={handleClear}
               disabled={uploading}
-              className="hidden group-hover:flex items-center gap-1.5 bg-destructive/70 hover:bg-destructive text-destructive-foreground font-mono text-[9px] tracking-[1px] uppercase px-2.5 py-1.5 rounded-sm transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-destructive/70 hover:bg-destructive text-destructive-foreground font-mono text-[9px] tracking-[1px] uppercase px-2.5 py-1.5 rounded-sm transition-colors disabled:opacity-50"
             >
               <X className="w-3 h-3" />
               Hapus
             </button>
           </div>
+
           <div className="absolute top-2 right-2 bg-green-400/15 border border-green-400/25 rounded-sm p-1 text-green-400">
             <CheckCircle className="w-4 h-4" />
           </div>

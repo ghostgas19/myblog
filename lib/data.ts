@@ -1,4 +1,4 @@
-import type { Post, Message } from "./types";
+import type { Post, Message, Profile, Recommendation } from "./types";
 import { supabase } from "./supabase-server";
 
 // ---- Default seed data (dipakai saat pertama kali DB masih kosong) ----
@@ -488,4 +488,51 @@ export async function deleteMessage(id: string): Promise<boolean> {
   }
 
   return (count ?? 0) > 0;
+}
+
+// ---- Settings API (Dynamic Content) ----
+
+export async function getProfile(): Promise<Profile> {
+  const { data, error } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("key", "profile")
+    .maybeSingle();
+
+  if (error || !data) {
+    console.error("Supabase getProfile error:", error);
+    return {
+      name: "Penulis",
+      bio: "Cerita tentang perjalanan dan momen-momen kecil.",
+      role: "Penulis",
+      avatar: "👤",
+    };
+  }
+  return data.value;
+}
+
+export async function getRecommendations(): Promise<Recommendation[]> {
+  const { data, error } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("key", "recommendations")
+    .maybeSingle();
+
+  if (error || !data) {
+    console.error("Supabase getRecommendations error:", error);
+    return [];
+  }
+  return data.value;
+}
+
+export async function updateSetting(key: string, value: any): Promise<boolean> {
+  const { error } = await supabase
+    .from("settings")
+    .upsert({ key, value, updated_at: new Date().toISOString() });
+
+  if (error) {
+    console.error(`Supabase updateSetting (${key}) error:`, error);
+    return false;
+  }
+  return true;
 }
