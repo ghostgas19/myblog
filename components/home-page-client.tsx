@@ -8,6 +8,7 @@ import { BlogSidebar } from "@/components/blog-sidebar";
 import { PostsSkeleton } from "@/components/posts-skeleton";
 import { Settings } from "lucide-react";
 import { IntroScene } from "@/components/intro-scene";
+import { AnimatePresence } from "framer-motion";
 
 export default function HomePageWithIntro({
   posts,
@@ -37,15 +38,18 @@ export default function HomePageWithIntro({
   const categoriesWithPosts = categories.filter((cat) =>
     posts.some((p) => p.category === cat)
   );
-  
-  if (showIntro) {
-    return <IntroScene onComplete={handleIntroComplete} />;
-  }
 
   return (
-    <div className="min-h-screen bg-background text-foreground animate-in fade-in duration-1000">
-      {/* Film strip nav */}
-      <FilmStrip />
+    <>
+      <AnimatePresence>
+        {showIntro && (
+          <IntroScene key="intro-scene" onComplete={handleIntroComplete} />
+        )}
+      </AnimatePresence>
+
+      <div className="min-h-screen bg-background text-foreground">
+        {/* Film strip nav */}
+        <FilmStrip />
 
       <div className="max-w-5xl mx-auto px-6 pb-20">
         {/* Hero Header */}
@@ -182,5 +186,6 @@ export default function HomePageWithIntro({
         </footer>
       </div>
     </div>
+    </>
   );
 }
