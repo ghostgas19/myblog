@@ -22,8 +22,8 @@ const specialElite = Special_Elite({
 })
 
 export const metadata: Metadata = {
-  title: 'Ruang Cerita — Blog Pribadi',
-  description: 'Catatan dari balik lensa — pribadi, jujur, apa adanya.',
+  title: 'Movies For Two — Personal Blog',
+  description: 'Personal Blog by Ghostgas',
   generator: 'v0.app',
   themeColor: '#3B0A0A',
 }
@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id" className="dark">
+    <html lang="en" className="dark">
       <body
         className={`${playfair.variable} ${lora.variable} ${specialElite.variable} font-sans antialiased`}
       >

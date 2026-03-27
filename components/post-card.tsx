@@ -70,10 +70,10 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
           href={`/blog/${post.slug}`}
           className="font-mono text-[10px] tracking-[2px] uppercase text-amber-light hover:tracking-[4px] transition-all duration-200"
         >
-          Baca Selengkapnya →
+          Read More →
         </Link>
         <span className="text-[11px] text-muted-foreground italic">
-          {post.readingTime} menit baca
+          {post.readingTime} min read
         </span>
       </div>
     </article>

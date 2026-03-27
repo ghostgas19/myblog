@@ -28,11 +28,11 @@ export function BlogSidebar({ postCount, initialProfile, categories }: BlogSideb
   const profile = initialProfile;
   
   // Also include 'Semua' if needed, but let's follow the categories passed
-  const tags = categories.length > 0 ? [...categories, 'Semua'] : ['Semua'];
+  const tags = categories.length > 0 ? [...categories, 'All'] : ['All'];
   
   return (
-    <aside aria-label="Sidebar blog">
-      <SidebarBlock title="Tentang Penulis">
+    <aside aria-label="Blog sidebar">
+      <SidebarBlock title="About the Author">
         <div className="flex flex-col items-center">
           <div className="w-16 h-16 rounded-full border-2 border-amber bg-maroon-deep overflow-hidden group mb-2.5">
             {profile.avatar ? (
@@ -59,12 +59,12 @@ export function BlogSidebar({ postCount, initialProfile, categories }: BlogSideb
             {String(postCount).padStart(2, '0')}
           </div>
           <div className="font-mono text-[9px] tracking-[3px] text-muted-foreground mt-1 uppercase">
-            tulisan terpublikasi
+            published posts
           </div>
         </div>
       </SidebarBlock>
 
-      <SidebarBlock title="Topik">
+      <SidebarBlock title="Topics">
         <div className="flex flex-wrap gap-1.5">
           {tags.map((tag) => (
             <span

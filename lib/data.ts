@@ -4,30 +4,30 @@ import { supabase } from "./supabase-server";
 // ---- Default seed data (dipakai saat pertama kali DB masih kosong) ----
 
 const defaultCategories: string[] = [
-  "Refleksi",
-  "Perjalanan",
-  "Rekomendasi",
-  "Kehidupan",
-  "Kamera",
-  "Harian",
+  "Reflections",
+  "Travel",
+  "Recommendations",
+  "Life",
+  "Camera",
+  "Daily",
 ];
 
 // Seed posts – akan dimasukkan ke database saat pertama kali
 const defaultPosts: Post[] = [
   {
     id: "1",
-    title: "Mengapa Saya Mulai Menulis Lagi Setelah Dua Tahun Diam",
-    slug: "mengapa-saya-mulai-menulis-lagi",
+    title: "Why I Started Writing Again After Two Years of Silence",
+    slug: "why-i-started-writing-again",
     excerpt:
-      "Ada yang bilang menulis adalah cara terbaik untuk memahami diri sendiri. Saya tidak percaya itu — sampai suatu malam saya duduk di depan layar kosong dan tanpa sadar tangan mulai bergerak, kata demi kata, jujur tanpa filter.",
-    content: `Ada yang bilang menulis adalah cara terbaik untuk memahami diri sendiri. Saya tidak percaya itu — sampai suatu malam saya duduk di depan layar kosong dan tanpa sadar tangan mulai bergerak.
+      "Some say writing is the best way to understand yourself. I didn't believe it — until one night I sat in front of a blank screen and unconsciously my hands started moving, word by word, honest without filter.",
+    content: `Some say writing is the best way to understand yourself. I didn't believe it — until one night I sat in front of a blank screen and unconsciously my hands started moving.
 
-Dua tahun terakhir saya isi dengan hal-hal yang terlihat produktif dari luar: proyek selesai, target terpenuhi, angka-angka yang memuaskan. Tapi ada yang hilang. Semacam kemampuan untuk duduk diam tanpa merasa bersalah.
+The last two years I filled with things that looked productive from the outside: projects finished, targets met, satisfying numbers. But something was missing. A sort of ability to sit still without feeling guilty.
 
-Tulisan pertama yang muncul bukan cerita indah. Itu keluhan. Tentang betapa lelahnya saya berpura-pura baik-baik saja. Dan entah kenapa, setelah menuliskannya, saya tidur lebih nyenyak dari biasanya.
+The first writing that appeared wasn't a beautiful story. It was a complaint. About how tired I was of pretending to be okay. And for some reason, after writing it down, I slept better than usual.
 
-Mungkin itulah yang selama ini saya cari. Bukan audiens, bukan apresiasi. Hanya satu tempat di mana saya tidak perlu menyunting diri sendiri.`,
-    category: "Refleksi",
+Maybe that's what I've been looking for all this time. Not an audience, not appreciation. Just one place where I don't need to edit myself.`,
+    category: "Reflections",
     status: "published",
     coverEmoji: "🎞️",
     coverGradient: "from-maroon-deep via-maroon-warm to-amber",
@@ -38,18 +38,18 @@ Mungkin itulah yang selama ini saya cari. Bukan audiens, bukan apresiasi. Hanya 
   },
   {
     id: "2",
-    title: "Kereta Malam ke Kota yang Tidak Pernah Saya Rencanakan",
-    slug: "kereta-malam-ke-kota-tak-direncanakan",
+    title: "Night Train to a City I Never Planned",
+    slug: "night-train-to-unplanned-city",
     excerpt:
-      "Tiket itu dibeli tiga menit sebelum keberangkatan. Tidak ada rencana, tidak ada penginapan. Hanya tas ransel dan satu kamera dengan satu roll film tersisa.",
-    content: `Tiket itu dibeli tiga menit sebelum keberangkatan. Tidak ada rencana, tidak ada penginapan. Hanya tas ransel dan satu kamera dengan satu roll film tersisa.
+      "The ticket was bought three minutes before departure. No plan, no lodging. Just a backpack and one camera with one roll of film left.",
+    content: `The ticket was bought three minutes before departure. No plan, no lodging. Just a backpack and one camera with one roll of film left.
 
-Saat kereta mulai bergerak, saya sadar — ini mungkin keputusan paling tidak bertanggung jawab yang pernah saya buat. Tapi juga yang paling mengasyikkan dalam setahun terakhir.
+As the train started moving, I realized — this might be the most irresponsible decision I've made in a year. But also the most exciting.
 
-Kota itu kecil. Tidak ada di daftar destinasi wisata mana pun. Tapi ada satu warung kopi di tepi rel yang membuat kopi tubruk paling jujur yang pernah saya minum. Dan seorang bapak tua yang cerita tentang kota ini dua puluh tahun lalu, sebelum semua berubah.
+The city was small. It wasn't on any tourist destination list. But there was one coffee shop by the tracks that made the most honest tubruk coffee I've ever drunk. And an old man who told stories about this city twenty years ago, before everything changed.
 
-Satu roll film. Tiga puluh enam frame. Tidak ada yang Instagram-worthy. Tapi semuanya nyata.`,
-    category: "Perjalanan",
+One roll of film. Thirty-six frames. Nothing Instagram-worthy. But everything real.`,
+    category: "Travel",
     status: "published",
     coverEmoji: "🚂",
     coverGradient: "from-maroon-mid to-amber",
@@ -60,22 +60,22 @@ Satu roll film. Tiga puluh enam frame. Tidak ada yang Instagram-worthy. Tapi sem
   },
   {
     id: "3",
-    title: "5 Buku yang Mengubah Cara Saya Melihat Keheningan",
-    slug: "5-buku-mengubah-cara-melihat-keheningan",
+    title: "5 Books That Changed the Way I See Silence",
+    slug: "5-books-changed-way-see-silence",
     excerpt:
-      "Bukan self-help. Bukan motivasi. Ini buku-buku yang membuat saya merasa senang duduk sendirian selama berjam-jam tanpa merasa perlu melakukan apa-apa.",
-    content: `Bukan self-help. Bukan motivasi. Ini buku-buku yang membuat saya merasa senang duduk sendirian selama berjam-jam tanpa merasa perlu melakukan apa-apa.
+      "Not self-help. Not motivation. These are books that made me feel happy sitting alone for hours without feeling the need to do anything.",
+    content: `Not self-help. Not motivation. These are books that made me feel happy sitting alone for hours without feeling the need to do anything.
 
-**1. Siddhartha — Hermann Hesse.** Bukan tentang agama. Tentang perjalanan menemukan bahwa jawaban tidak ada di luar, selalu di dalam.
+**1. Siddhartha — Hermann Hesse.** Not about religion. About the journey of finding that the answers are not outside, always inside.
 
-**2. The Remains of the Day — Kazuo Ishiguro.** Novel paling sepi yang pernah saya baca. Dan justru karena itu, paling mengena.
+**2. The Remains of the Day — Kazuo Ishiguro.** The loneliest novel I've ever read. And precisely because of that, the most touching.
 
-**3. Meditations — Marcus Aurelius.** Bukan untuk dibaca habis sekaligus. Satu paragraf sehari, sudah cukup untuk mengubah cara pandang.
+**3. Meditations — Marcus Aurelius.** Not to be read all at once. One paragraph a day is enough to change your perspective.
 
-**4. Norwegian Wood — Haruki Murakami.** Karena terkadang kita perlu bertemu karakter yang lebih galau dari kita sendiri.
+**4. Norwegian Wood — Haruki Murakami.** Because sometimes we need to meet characters who are more troubled than we are.
 
-**5. Sapiens — Yuval Noah Harari.** Supaya kita ingat bahwa semua kekhawatiran kita, dalam skala waktu yang lebih besar, tidak sebesar yang kita kira.`,
-    category: "Rekomendasi",
+**5. Sapiens — Yuval Noah Harari.** So we remember that all our worries, in a larger timescale, are not as big as we think.`,
+    category: "Recommendations",
     status: "published",
     coverEmoji: "📚",
     coverGradient: "from-maroon-warm to-maroon-deep",
@@ -86,18 +86,18 @@ Satu roll film. Tiga puluh enam frame. Tidak ada yang Instagram-worthy. Tapi sem
   },
   {
     id: "4",
-    title: "Tentang Berdamai dengan Kecepatan Hidup Kita Sendiri",
-    slug: "berdamai-kecepatan-hidup-sendiri",
+    title: "On Making Peace with Our Own Life's Pace",
+    slug: "making-peace-with-own-life-pace",
     excerpt:
-      "Semua orang sepertinya sudah selangkah lebih maju. Tapi mungkin memang begitu cara hidup bekerja — bukan tentang siapa yang paling cepat, tapi siapa yang paling sadar.",
-    content: `Semua orang sepertinya sudah selangkah lebih maju. Teman kuliah sudah kerja di perusahaan besar. Yang lain sudah punya rumah. Yang satu lagi baru posting foto pernikahan.
+      "Everyone seems to be a step ahead. But maybe that's how life works — it's not about who's the fastest, but who's the most aware.",
+    content: `Everyone seems to be a step ahead. College friends already working in big companies. Others already have houses. Another just posted a wedding photo.
 
-Dan kita? Masih di sini, dengan kopi yang sudah dingin, menatap to-do list yang belum selesai.
+And us? Still here, with coffee that's already cold, staring at a to-do list that isn't finished.
 
-Saya pernah menghabiskan terlalu banyak waktu membandingkan. Sampai suatu hari saya sadar: saya sedang berlari di lintasan orang lain. Tentu saja saya selalu kalah.
+I once spent too much time comparing. Until one day I realized: I was running on someone else's track. Of course I always lost.
 
-Lintasan saya tidak lebih lambat. Hanya berbeda. Dan berdamai dengan itu adalah salah satu hal terberat sekaligus paling membebaskan yang pernah saya lakukan.`,
-    category: "Kehidupan",
+My track isn't slower. Just different. And making peace with that is one of the hardest yet most liberating things I've ever done.`,
+    category: "Life",
     status: "published",
     coverEmoji: "☁️",
     coverGradient: "from-amber to-maroon-warm",
@@ -108,18 +108,18 @@ Lintasan saya tidak lebih lambat. Hanya berbeda. Dan berdamai dengan itu adalah 
   },
   {
     id: "5",
-    title: "Hal-hal Kecil yang Saya Syukuri di Akhir Tahun Lalu",
-    slug: "hal-kecil-yang-disyukuri",
+    title: "Small Things I Was Grateful for at the End of Last Year",
+    slug: "small-things-grateful-for",
     excerpt:
-      "Bukan pencapaian besar. Bukan momen dramatis. Tapi kopi yang tepat suhunya, hujan di hari yang pas, dan percakapan yang tidak perlu berakhir.",
-    content: `Bukan pencapaian besar. Bukan momen dramatis. Ini tentang hal-hal yang mudah terlewat kalau kita terlalu sibuk mencari yang besar.
+      "Not big achievements. Not dramatic moments. But coffee at the right temperature, rain on the right day, and conversations that didn't need to end.",
+    content: `Not big achievements. Not dramatic moments. This is about things that are easy to miss if we're too busy looking for the big ones.
 
-Kopi yang tepat suhunya di pagi yang dingin. Hujan deras di sore hari ketika tidak ada rencana keluar. Menemukan buku yang rasanya ditulis tepat untuk kondisi hati kita saat itu.
+Coffee at the right temperature on a cold morning. Heavy rain in the afternoon when there were no plans to go out. Finding a book that felt like it was written exactly for my heart's condition at that time.
 
-Percakapan yang mengalir tanpa terasa, sampai sadar sudah dua jam berlalu. Momen ketika seseorang berkata "saya juga merasakan hal yang sama" dan rasanya tidak sendirian lagi.
+Conversations that flowed without notice, until realizing two hours had passed. Moments when someone says "I feel the same way" and it feels like not being alone anymore.
 
-Tahun lalu tidak sempurna. Tapi ada cukup banyak momen kecil yang membuatnya layak untuk dikenang dengan hangat.`,
-    category: "Refleksi",
+Last year wasn't perfect. But there were enough small moments that made it worthy of being remembered warmly.`,
+    category: "Reflections",
     status: "published",
     coverEmoji: "🌙",
     coverGradient: "from-maroon-deep to-maroon-mid",
@@ -130,18 +130,18 @@ Tahun lalu tidak sempurna. Tapi ada cukup banyak momen kecil yang membuatnya lay
   },
   {
     id: "6",
-    title: "Catatan Perjalanan: Kamera Film di Era Digital",
-    slug: "kamera-film-era-digital",
+    title: "Travel Notes: Film Camera in the Digital Era",
+    slug: "film-camera-digital-era",
     excerpt:
-      "Ketika semua orang memegang smartphone dengan kamera 50 megapiksel, saya memilih membawa kamera yang hanya bisa mengambil 36 foto.",
-    content: `Ketika semua orang memegang smartphone dengan kamera 50 megapiksel, saya memilih membawa kamera yang hanya bisa mengambil 36 foto.
+      "When everyone holds a smartphone with a 50-megapixel camera, I choose to carry a camera that can only take 36 photos.",
+    content: `When everyone holds a smartphone with a 50-megapixel camera, I choose to carry a camera that can only take 36 photos.
 
-Pilihan itu membuat saya lebih selektif. Lebih hadir. Lebih sadar bahwa setiap frame punya harga.
+That choice makes me more selective. More present. More aware that every frame has a price.
 
-Ada sesuatu yang magis ketika kita menunggu roll film dicuci dan dicetak. Ketegangan kecil. Antisipasi yang tidak bisa kita rasakan di era digital.
+There's something magical when we wait for the roll of film to be developed and printed. A small tension. Anticipation that we can't feel in the digital age.
 
-Dan ketika foto-foto itu akhirnya muncul — dengan segala ketidaksempurnaannya, grain-nya, warnanya yang sedikit melenceng — rasanya seperti kenangan yang lebih nyata dari resolusi tinggi mana pun.`,
-    category: "Rekomendasi",
+And when those photos finally appear — with all their imperfections, grain, slightly off colors — it feels like a memory that's more real than any high resolution.`,
+    category: "Recommendations",
     status: "draft",
     coverEmoji: "📷",
     coverGradient: "from-maroon-mid to-maroon-warm",
@@ -503,9 +503,9 @@ export async function getProfile(): Promise<Profile> {
   if (error || !data) {
     console.error("Supabase getProfile error:", error);
     return {
-      name: "Penulis",
-      bio: "Cerita tentang perjalanan dan momen-momen kecil.",
-      role: "Penulis",
+      name: "Author",
+      bio: "Stories about travels and small moments.",
+      role: "Author",
       avatar: "👤",
     };
   }

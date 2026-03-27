@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function FilmStrip({ label = 'Ruang Cerita · Est. 2025 · 135mm' }: { label?: string }) {
+export function FilmStrip({ label = 'Movies For Two · Est. 2025 · 135mm' }: { label?: string }) {
   return (
     <div className="w-full h-10 bg-film-strip flex items-center justify-between sticky top-0 z-50 shadow-[0_2px_12px_rgba(0,0,0,0.6)] overflow-hidden">
       {/* Left sprocket holes */}
