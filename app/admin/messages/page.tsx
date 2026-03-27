@@ -59,10 +59,10 @@ export default function AdminMessagesPage() {
     <div className="p-6 max-w-4xl">
       <div className="mb-8">
         <h1 className="font-serif text-2xl font-bold text-foreground">
-          Kotak Surat
+          Inbox
         </h1>
         <p className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground mt-0.5">
-          Pesan anonim dari pengunjung
+          Anonymous messages from visitors
         </p>
       </div>
 

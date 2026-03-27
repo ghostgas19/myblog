@@ -12,7 +12,7 @@ interface ImageUploadProps {
 export function ImageUpload({
   value,
   onUpload,
-  label = "Banner Gambar",
+  label = "Banner Image",
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export function ImageUpload({
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setError("Ukuran file tidak boleh lebih dari 5MB");
+      setError("File size cannot exceed 5MB");
       return;
     }
 
@@ -101,12 +101,12 @@ export function ImageUpload({
               {uploading ? (
                 <>
                   <Loader2 className="w-3 h-3 animate-spin" />
-                  Upload
+                  Uploading
                 </>
               ) : (
                 <>
                   <Upload className="w-3 h-3" />
-                  Ganti
+                  Change
                 </>
               )}
             </button>
@@ -136,14 +136,14 @@ export function ImageUpload({
             <>
               <Loader2 className="w-6 h-6 mx-auto mb-2 animate-spin text-muted-foreground" />
               <p className="font-mono text-[10px] tracking-[1px] uppercase text-muted-foreground">
-                Sedang upload...
+                Uploading...
               </p>
             </>
           ) : (
             <>
               <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
               <p className="font-mono text-[10px] tracking-[1px] uppercase text-muted-foreground mb-0.5">
-                Klik atau drag gambar di sini
+                Click or drag image here
               </p>
               <p className="text-xs text-muted-foreground/60">
                 JPG, PNG, WebP • Max 5MB

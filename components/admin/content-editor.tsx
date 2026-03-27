@@ -72,7 +72,7 @@ export default function AdminContentEditor({
       ...recs,
       {
         id: String(Date.now()),
-        type: "Lagu",
+        type: "Song",
         title: "",
         artist: "",
         emoji: "🎵",
@@ -114,7 +114,7 @@ export default function AdminContentEditor({
         <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8">
           <div className="space-y-4">
             <ImageUpload
-              label="Foto Profil"
+              label="Profile Picture"
               value={profile.avatar}
               onUpload={handleProfileImageUpload}
             />
@@ -129,7 +129,7 @@ export default function AdminContentEditor({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground">
-                  Nama
+                  Name
                 </label>
                 <input
                   value={profile.name}
@@ -154,7 +154,7 @@ export default function AdminContentEditor({
             </div>
             <div className="space-y-2">
               <label className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground">
-                Bio Singkat
+                Short Bio
               </label>
               <textarea
                 value={profile.bio}
@@ -193,7 +193,7 @@ export default function AdminContentEditor({
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <Heart className="w-5 h-5 text-amber" />
-            <h2 className="font-serif text-xl font-bold">Rekomendasi Utama</h2>
+            <h2 className="font-serif text-xl font-bold">Top Recommendations</h2>
           </div>
           <button
             onClick={addRec}
@@ -219,16 +219,16 @@ export default function AdminContentEditor({
               <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <label className="font-mono text-[8px] tracking-[1px] text-muted-foreground uppercase">
-                    Tipe
+                    Type
                   </label>
                   <select
                     value={rec.type}
                     onChange={(e) => updateRec(i, "type", e.target.value)}
                     className="w-full bg-muted border border-border rounded-sm px-3 py-1.5 text-xs text-foreground focus:outline-none"
                   >
-                    <option>Lagu</option>
-                    <option>Film</option>
-                    <option>Buku</option>
+                    <option>Song</option>
+                    <option>Movie</option>
+                    <option>Book</option>
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -239,24 +239,24 @@ export default function AdminContentEditor({
                     value={rec.title}
                     onChange={(e) => updateRec(i, "title", e.target.value)}
                     className="w-full bg-muted border border-border rounded-sm px-3 py-1.5 text-xs focus:outline-none"
-                    placeholder="Judul..."
+                    placeholder="Title..."
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="font-mono text-[8px] tracking-[1px] text-muted-foreground uppercase">
-                    Artis/Penulis
+                    Artist/Author
                   </label>
                   <div className="flex gap-2">
                     <input
                       value={rec.artist}
                       onChange={(e) => updateRec(i, "artist", e.target.value)}
                       className="flex-1 bg-muted border border-border rounded-sm px-3 py-1.5 text-xs focus:outline-none"
-                      placeholder="Nama..."
+                      placeholder="Name..."
                     />
                     <button
                       onClick={() => removeRec(i)}
                       className="p-1.5 text-muted-foreground hover:text-red-400 transition-colors"
-                      aria-label="Hapus"
+                      aria-label="Delete"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>

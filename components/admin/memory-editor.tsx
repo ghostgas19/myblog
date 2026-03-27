@@ -101,7 +101,7 @@ export function MemoryEditor() {
 
   return (
     <div className="space-y-10">
-      {/* Form Tambah Baru */}
+      {/* Add New Memory Form */}
       <section className="bg-card border border-border rounded-sm p-6 shadow-sm">
         <h3 className="font-serif text-xl font-bold mb-6 flex items-center gap-2">
           <Plus className="w-5 h-5 text-amber" />
@@ -131,7 +131,7 @@ export function MemoryEditor() {
                   onChange={(e) =>
                     setNewItem({ ...newItem, location: e.target.value })
                   }
-                  placeholder="Contoh: Yogyakarta, Indonesia"
+                  placeholder="Example: London, UK"
                   className="w-full bg-input border border-border rounded-sm px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-amber"
                 />
               </div>
@@ -181,7 +181,7 @@ export function MemoryEditor() {
         </div>
       </section>
 
-      {/* Daftar Kenangan */}
+      {/* Memory List */}
       <section>
         <h3 className="font-serif text-xl font-bold mb-6 flex items-center gap-2">
           <Camera className="w-5 h-5 text-amber" />

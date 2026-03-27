@@ -260,7 +260,7 @@ export function PostEditor({
             <ImageUpload
               value={bannerUrl}
               onUpload={setBannerUrl}
-              label="Banner Gambar"
+              label="Banner Image"
             />
           </div>
 
@@ -294,7 +294,7 @@ export function PostEditor({
                   setSlugManual(true);
                   setSlug(e.target.value);
                 }}
-                placeholder="judul-tulisan"
+                placeholder="post-title"
                 className="flex-1 bg-input border border-border rounded-sm px-3 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring transition-colors"
               />
             </div>
@@ -377,7 +377,7 @@ export function PostEditor({
               }}
             />
             <div className="px-4 py-3 border-b border-border font-mono text-[10px] tracking-[2px] uppercase text-amber flex items-center gap-1.5">
-              <Tag className="w-3 h-3" /> Kategori
+              <Tag className="w-3 h-3" /> Category
             </div>
 
             <div className="p-4">
@@ -447,7 +447,7 @@ export function PostEditor({
                               type="button"
                               onClick={(e) => handleDeleteCategory(cat, e)}
                               disabled={deletingCat === cat}
-                              title={`Hapus "${cat}"`}
+                              title={`Delete "${cat}"`}
                               className={`shrink-0 p-0.5 rounded-sm transition-colors disabled:opacity-40 ${
                                 category === cat
                                   ? "text-amber/50 hover:text-destructive opacity-100"
@@ -500,7 +500,7 @@ export function PostEditor({
                             type="button"
                             onClick={handleAddCategory}
                             disabled={catPending || !newCatName.trim()}
-                            title="Simpan"
+                            title="Save"
                             className="flex items-center justify-center w-7 h-7 bg-amber hover:bg-amber-light text-primary-foreground rounded-sm transition-colors disabled:opacity-50 shrink-0"
                           >
                             {catPending ? (
@@ -517,7 +517,7 @@ export function PostEditor({
                               setNewCatName("");
                               setCatError(null);
                             }}
-                            title="Batal"
+                            title="Cancel"
                             className="flex items-center justify-center w-7 h-7 border border-border text-muted-foreground hover:text-foreground rounded-sm transition-colors shrink-0"
                           >
                             <X className="w-3 h-3" />

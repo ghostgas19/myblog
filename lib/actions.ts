@@ -92,9 +92,9 @@ export async function deletePostAction(id: string) {
 
 export async function createCategoryAction(name: string) {
   const trimmed = name?.trim();
-  if (!trimmed) return { error: "Nama kategori tidak boleh kosong." };
+  if (!trimmed) return { error: "Category name cannot be empty." };
   if (trimmed.length > 40)
-    return { error: "Nama kategori maksimal 40 karakter." };
+    return { error: "Category name must be maximum 40 characters." };
 
   const category = await createCategory(trimmed);
   revalidatePath("/", "layout");
@@ -104,10 +104,10 @@ export async function createCategoryAction(name: string) {
 }
 
 export async function deleteCategoryAction(name: string) {
-  if (!name) return { error: "Nama kategori tidak valid." };
+  if (!name) return { error: "Invalid category name." };
 
   const ok = await deleteCategory(name);
-  if (!ok) return { error: "Kategori tidak ditemukan." };
+  if (!ok) return { error: "Category not found." };
 
   revalidatePath("/", "layout");
   revalidatePath("/admin", "layout");

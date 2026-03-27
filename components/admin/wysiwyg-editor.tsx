@@ -38,12 +38,12 @@ const MenuBar = ({ editor }: { editor: any }) => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Pilih file gambar yang valid");
+      alert("Please select a valid image file");
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("Ukuran file tidak boleh lebih dari 5MB");
+      alert("File size cannot exceed 5MB");
       return;
     }
 
@@ -59,13 +59,13 @@ const MenuBar = ({ editor }: { editor: any }) => {
       });
 
       if (!response.ok) {
-        throw new Error("Upload gagal");
+        throw new Error("Upload failed");
       }
 
       const data = await response.json();
       editor.chain().focus().setImage({ src: data.url }).run();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Upload gagal");
+      alert(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
       if (fileInputRef.current) {

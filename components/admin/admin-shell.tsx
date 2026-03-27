@@ -47,7 +47,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           type="button"
           className="fixed inset-0 z-40 bg-black/40 md:hidden"
           onClick={close}
-          aria-label="Tutup menu navigasi"
+          aria-label="Close navigation menu"
         />
       )}
 
@@ -68,7 +68,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               type="button"
               className="inline-flex items-center justify-center rounded-sm text-sidebar-foreground/80 hover:text-amber hover:bg-sidebar-accent/40 p-1.5 md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
               onClick={() => setOpen((v) => !v)}
-              aria-label={open ? "Tutup menu" : "Buka menu"}
+              aria-label={open ? "Close menu" : "Open menu"}
             >
               {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -144,7 +144,7 @@ function AdminSidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <NavItem
           href="/"
           icon={<Home className="w-4 h-4" />}
-          label="Lihat Blog"
+          label="View Blog"
           onClick={onNavigate}
         />
       </div>
