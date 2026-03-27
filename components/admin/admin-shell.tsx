@@ -11,6 +11,7 @@ import {
   X,
   Mail,
   Settings,
+  Camera,
 } from "lucide-react";
 
 
@@ -133,6 +134,12 @@ function AdminSidebarContent({
           icon={<Mail className="w-4 h-4" />}
           label="Pesan Masuk"
           onClick={onNavigate}
+        />
+        <NavItem 
+          href="/admin/kenangan" 
+          icon={<Camera className="w-4 h-4" />} 
+          label="Kenangan" 
+          onClick={onNavigate} 
         />
         <NavItem
           href="/admin/settings"

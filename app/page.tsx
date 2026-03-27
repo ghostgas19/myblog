@@ -62,6 +62,12 @@ export default function HomePage() {
               bg: "from-amber to-maroon-mid" 
             },
             {
+              img: "/polaroid-kenangan.png",
+              label: "Kenangan",
+              href: "/kenangan",
+              bg: "from-amber-600 to-maroon-warm",
+            },
+            {
               img: "/polaroid-inbox.png",
               label: "Kotak Surat",
               href: "/kotak-surat",
@@ -91,7 +97,7 @@ export default function HomePage() {
                    <img 
                      src={img} 
                      alt={label} 
-                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
+                     className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-700" 
                    />
                 ) : (
                   <div className={`w-full h-full bg-gradient-to-br ${bg}`} />

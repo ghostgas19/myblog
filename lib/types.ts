@@ -30,8 +30,21 @@ export interface Profile {
 }
 
 export interface Recommendation {
-  type: string;
+  id: string;
   title: string;
   artist: string;
-  emoji: string;
+  description?: string;
+  image: string;
+  link?: string;
+  emoji?: string;
+  type?: string;
+}
+
+export interface Memory {
+  id: string;
+  image: string;
+  location: string;
+  caption: string;
+  date: string;
+  created_at?: string;
 }

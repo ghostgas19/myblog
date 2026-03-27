@@ -32,7 +32,7 @@ export default function LoginPage() {
         }
 
         const from = searchParams.get('from') || '/admin'
-        router.push(from)
+        window.location.href = from
       } catch (err) {
         setError('Terjadi kesalahan saat login.')
       }

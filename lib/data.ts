@@ -1,4 +1,4 @@
-import type { Post, Message, Profile, Recommendation } from "./types";
+import type { Post, Message, Profile, Recommendation, Memory } from "./types";
 import { supabase } from "./supabase-server";
 
 // ---- Default seed data (dipakai saat pertama kali DB masih kosong) ----
@@ -219,6 +219,7 @@ export async function getCategories(): Promise<string[]> {
 
   return (data ?? []).map((row: { name: string }) => row.name);
 }
+
 
 export async function createCategory(name: string): Promise<string> {
   const normalized = name.trim();
@@ -535,4 +536,45 @@ export async function updateSetting(key: string, value: any): Promise<boolean> {
     return false;
   }
   return true;
+}
+
+// Memory functions
+export async function getMemories(): Promise<Memory[]> {
+  const { data, error } = await supabase
+    .from("memories")
+    .select("*")
+    .order("date", { ascending: false });
+  if (error) {
+    console.error("Error fetching memories:", error);
+    return [];
+  }
+  return data as Memory[];
+}
+
+export async function addMemory(memory: Omit<Memory, "id" | "created_at">) {
+  const { data, error } = await supabase
+    .from("memories")
+    .insert([memory])
+    .select();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteMemory(id: string) {
+  const { error } = await supabase
+    .from("memories")
+    .delete()
+    .eq("id", id);
+  if (error) throw error;
+  return true;
+}
+
+export async function updateMemory(id: string, memory: Partial<Memory>) {
+  const { data, error } = await supabase
+    .from("memories")
+    .update(memory)
+    .eq("id", id)
+    .select();
+  if (error) throw error;
+  return data;
 }
