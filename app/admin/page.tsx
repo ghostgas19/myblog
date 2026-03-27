@@ -13,17 +13,17 @@ async function StatsCards() {
   const drafts = posts.filter((p) => p.status === 'draft').length
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
       {[
         { label: 'Total Tulisan', value: posts.length, icon: <FileText className="w-5 h-5" />, color: 'text-amber' },
         { label: 'Terpublikasi', value: published, icon: <CheckCircle className="w-5 h-5" />, color: 'text-green-400' },
         { label: 'Draft', value: drafts, icon: <Clock className="w-5 h-5" />, color: 'text-muted-foreground' },
       ].map(({ label, value, icon, color }) => (
-        <div key={label} className="bg-card border border-border rounded-sm p-4 flex items-center gap-4">
+        <div key={label} className="bg-card border border-border rounded-sm p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
           <span className={color}>{icon}</span>
           <div>
-            <div className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground">{label}</div>
-            <div className={`font-serif text-2xl font-bold ${color}`}>{value}</div>
+            <div className="font-mono text-[8px] sm:text-[10px] tracking-[2px] uppercase text-muted-foreground">{label}</div>
+            <div className={`font-serif text-xl sm:text-2xl font-bold ${color}`}>{value}</div>
           </div>
         </div>
       ))}
@@ -35,7 +35,7 @@ async function PostsTable() {
   const posts = await getPosts()
 
   return (
-    <div className="bg-card border border-border rounded-sm overflow-hidden">
+    <div className="bg-card border border-border rounded-sm overflow-hidden overflow-x-auto">
       {/* Film frame top */}
       <div
         className="h-3 bg-film-strip"
@@ -45,33 +45,33 @@ async function PostsTable() {
         }}
       />
 
-      {/* Table header */}
-      <div className="grid grid-cols-[1fr_100px_120px_80px] gap-4 px-5 py-3 border-b border-border font-mono text-[9px] tracking-[2px] uppercase text-muted-foreground">
+      {/* Table header - hidden on mobile, shown on sm and up */}
+      <div className="hidden sm:grid sm:grid-cols-[1fr_100px_120px_80px] gap-4 px-3 sm:px-5 py-2 sm:py-3 border-b border-border font-mono text-[8px] sm:text-[9px] tracking-[2px] uppercase text-muted-foreground">
         <span>Judul</span>
         <span>Kategori</span>
         <span>Tanggal</span>
         <span className="text-right">Aksi</span>
       </div>
 
-      {/* Rows */}
+      {/* Rows - responsive layout */}
       {posts.length === 0 ? (
-        <div className="px-5 py-12 text-center text-muted-foreground font-mono text-xs tracking-widest uppercase">
+        <div className="px-4 sm:px-5 py-8 sm:py-12 text-center text-muted-foreground font-mono text-xs tracking-widest uppercase">
           Belum ada tulisan.
         </div>
       ) : (
         posts.map((post) => (
           <div
             key={post.id}
-            className="grid grid-cols-[1fr_100px_120px_80px] gap-4 px-5 py-4 border-b border-border/50 items-center hover:bg-muted/20 transition-colors duration-150 last:border-0"
+            className="grid grid-cols-1 sm:grid-cols-[1fr_100px_120px_80px] gap-3 sm:gap-4 px-3 sm:px-5 py-3 sm:py-4 border-b border-border/50 items-start sm:items-center hover:bg-muted/20 transition-colors duration-150 last:border-0"
           >
             {/* Title + status */}
             <div className="min-w-0">
-              <p className="font-serif text-sm font-semibold text-foreground truncate leading-tight">
+              <p className="font-serif text-sm sm:text-base font-semibold text-foreground truncate leading-tight">
                 {post.title}
               </p>
-              <div className="flex items-center gap-1.5 mt-1">
+              <div className="flex items-center gap-1.5 mt-1.5 sm:mt-1">
                 <span
-                  className={`inline-flex items-center gap-1 font-mono text-[8px] tracking-[1.5px] uppercase px-1.5 py-0.5 rounded-sm ${
+                  className={`inline-flex items-center gap-1 font-mono text-[7px] sm:text-[8px] tracking-[1px] sm:tracking-[1.5px] uppercase px-1.5 py-0.5 rounded-sm ${
                     post.status === 'published'
                       ? 'bg-green-400/15 text-green-400 border border-green-400/25'
                       : 'bg-muted text-muted-foreground border border-border'
@@ -87,16 +87,16 @@ async function PostsTable() {
               </div>
             </div>
 
-            {/* Category */}
-            <span className="font-mono text-[9px] tracking-[1px] uppercase text-amber bg-amber/10 px-2 py-0.5 rounded-sm w-fit">
+            {/* Category - visible on sm and up */}
+            <span className="hidden sm:inline font-mono text-[8px] sm:text-[9px] tracking-[1px] uppercase text-amber bg-amber/10 px-2 py-0.5 rounded-sm w-fit">
               {post.category}
             </span>
 
-            {/* Date */}
-            <span className="text-xs text-muted-foreground italic">{formatDate(post.createdAt)}</span>
+            {/* Date - visible on sm and up */}
+            <span className="hidden sm:inline text-xs text-muted-foreground italic">{formatDate(post.createdAt)}</span>
 
-            {/* Actions */}
-            <div className="flex items-center justify-end gap-1">
+            {/* Actions - on mobile show below title, on sm and up on right */}
+            <div className="flex items-center justify-start sm:justify-end gap-1 sm:gap-2 flex-wrap">
               <Link
                 href={`/blog/${post.slug}`}
                 className="p-1.5 text-muted-foreground hover:text-amber transition-colors duration-200"
@@ -113,6 +113,14 @@ async function PostsTable() {
                 <PenLine className="w-4 h-4" />
               </Link>
               <DeletePostButton id={post.id} />
+            </div>
+
+            {/* Mobile-only category and date info */}
+            <div className="sm:hidden col-span-1 flex flex-wrap gap-2 text-[10px] text-muted-foreground mt-2">
+              <span className="font-mono text-[8px] tracking-[1px] uppercase text-amber bg-amber/10 px-2 py-0.5 rounded-sm">
+                {post.category}
+              </span>
+              <span className="italic">{formatDate(post.createdAt)}</span>
             </div>
           </div>
         ))
@@ -145,30 +153,30 @@ function TableSkeleton() {
 
 export default function AdminDashboard() {
   return (
-    <div className="p-6 max-w-5xl">
+    <div className="p-4 sm:p-6 max-w-5xl">
       {/* Page header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 mb-6 sm:mb-8">
         <div>
-          <h1 className="font-serif text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="font-mono text-[10px] tracking-[2px] uppercase text-muted-foreground mt-0.5">
+          <h1 className="font-serif text-xl sm:text-2xl font-bold text-foreground">Dashboard</h1>
+          <p className="font-mono text-[9px] sm:text-[10px] tracking-[2px] uppercase text-muted-foreground mt-1">
             Kelola semua tulisan
           </p>
         </div>
         <Link
           href="/admin/new"
-          className="flex items-center gap-2 bg-amber hover:bg-amber-light text-primary-foreground font-mono text-[10px] tracking-[2px] uppercase px-4 py-2.5 rounded-sm transition-colors duration-200"
+          className="flex items-center gap-2 bg-amber hover:bg-amber-light text-primary-foreground font-mono text-[9px] sm:text-[10px] tracking-[2px] uppercase px-3 sm:px-4 py-2 sm:py-2.5 rounded-sm transition-colors duration-200 whitespace-nowrap"
         >
           <PenSquare className="w-4 h-4" />
-          Tulisan Baru
+          <span>Tulisan Baru</span>
         </Link>
       </div>
 
       {/* Stats */}
       <Suspense
         fallback={
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-20 bg-card border border-border rounded-sm animate-pulse" />
+              <div key={i} className="h-16 sm:h-20 bg-card border border-border rounded-sm animate-pulse" />
             ))}
           </div>
         }

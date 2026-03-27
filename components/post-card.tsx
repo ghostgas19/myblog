@@ -24,7 +24,7 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
 
       {/* Cover */}
       <div
-        className={`w-full flex items-center justify-center text-5xl bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber overflow-hidden relative ${featured ? 'h-52' : 'h-40'}`}
+        className={`w-full flex items-center justify-center text-4xl sm:text-5xl bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber overflow-hidden relative ${featured ? 'h-40 sm:h-52' : 'h-32 sm:h-40'}`}
         aria-hidden="true"
       >
         {post.bannerUrl ? (
@@ -40,23 +40,23 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
       </div>
 
       {/* Exposure number */}
-      <span className="absolute top-6 right-2.5 font-mono text-[11px] text-film-yellow bg-black/60 px-1.5 py-0.5 rounded-sm tracking-wide">
+      <span className="absolute top-6 right-2.5 font-mono text-[10px] sm:text-[11px] text-film-yellow bg-black/60 px-1.5 py-0.5 rounded-sm tracking-wide">
         ■ {String(index + 1).padStart(2, '0')}
       </span>
 
       {/* Body */}
-      <div className="p-4 flex-1 flex flex-col">
-        <div className="flex items-center gap-2.5 mb-2.5">
-          <span className="font-mono text-[9px] tracking-[2px] uppercase bg-amber text-primary-foreground px-2 py-0.5 rounded-sm">
+      <div className="p-3 sm:p-4 flex-1 flex flex-col">
+        <div className="flex flex-wrap items-center gap-2 mb-2.5">
+          <span className="font-mono text-[8px] sm:text-[9px] tracking-[1.5px] sm:tracking-[2px] uppercase bg-amber text-primary-foreground px-2 py-0.5 rounded-sm">
             {post.category}
           </span>
-          <span className="text-[11px] text-muted-foreground italic">
+          <span className="text-[10px] sm:text-[11px] text-muted-foreground italic">
             {formatDate(post.createdAt)}
           </span>
         </div>
 
         <h2
-          className={`font-serif font-bold text-foreground leading-tight mb-2.5 ${featured ? 'text-2xl' : 'text-lg'}`}
+          className={`font-serif font-bold text-foreground leading-tight mb-2.5 ${featured ? 'text-xl sm:text-2xl' : 'text-base sm:text-lg'}`}
         >
           {post.title}
         </h2>
@@ -67,14 +67,14 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-3 border-t border-border flex justify-between items-center">
+      <div className="px-3 sm:px-5 py-2.5 sm:py-3 border-t border-border flex flex-col sm:flex-row justify-between gap-2 sm:gap-3 items-start sm:items-center">
         <Link
           href={`/blog/${post.slug}`}
-          className="font-mono text-[10px] tracking-[2px] uppercase text-amber-light hover:tracking-[4px] transition-all duration-200"
+          className="font-mono text-[9px] sm:text-[10px] tracking-[2px] uppercase text-amber-light hover:tracking-[4px] transition-all duration-200"
         >
           Baca Selengkapnya →
         </Link>
-        <span className="text-[11px] text-muted-foreground italic">
+        <span className="text-[9px] sm:text-[11px] text-muted-foreground italic whitespace-nowrap">
           {post.readingTime} menit baca
         </span>
       </div>

@@ -23,23 +23,23 @@ export default function HomePage() {
       {/* Film strip nav */}
       <FilmStrip />
 
-      <div className="max-w-5xl mx-auto px-6 pb-20">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
         {/* Hero Header */}
-        <header className="text-center pt-16 pb-10">
-          <div className="inline-block bg-film-yellow text-primary-foreground font-mono text-[10px] tracking-[4px] uppercase px-4 py-1 rounded-sm mb-5 shadow-[2px_2px_0_theme(colors.amber)]">
+        <header className="text-center pt-8 sm:pt-16 pb-6 sm:pb-10">
+          <div className="inline-block bg-film-yellow text-primary-foreground font-mono text-[9px] sm:text-[10px] tracking-[3px] sm:tracking-[4px] uppercase px-3 sm:px-4 py-1 rounded-sm mb-4 sm:mb-5 shadow-[2px_2px_0_theme(colors.amber)]">
             ▣ Kodak Gold 200 · ISO 200
           </div>
-          <h1 className="font-serif text-5xl md:text-7xl font-bold leading-none tracking-tight text-foreground [text-shadow:3px_3px_0_theme(colors.maroon-deep),0_0_40px_rgba(200,137,58,0.3)] text-balance">
+          <h1 className="font-serif text-3xl sm:text-5xl md:text-7xl font-bold leading-none tracking-tight text-foreground [text-shadow:2px_2px_0_theme(colors.maroon-deep),0_0_30px_rgba(200,137,58,0.3)] sm:[text-shadow:3px_3px_0_theme(colors.maroon-deep),0_0_40px_rgba(200,137,58,0.3)] text-balance">
             Ruang <em className="italic text-amber-light">Cerita</em>
           </h1>
-          <p className="font-sans italic text-base text-maroon-light mt-3 tracking-wide">
+          <p className="font-sans italic text-sm sm:text-base text-maroon-light mt-2 sm:mt-3 tracking-wide">
             catatan dari balik lensa — pribadi, jujur, apa adanya.
           </p>
         </header>
 
-        {/* Polaroid row decoration */}
+        {/* Polaroid row decoration - hidden on mobile, shown on sm and up */}
         <div
-          className="flex justify-center gap-5 my-9 flex-wrap"
+          className="hidden sm:flex justify-center gap-5 my-9 flex-wrap"
           aria-hidden="true"
         >
           {[
@@ -87,32 +87,33 @@ export default function HomePage() {
         </div>
 
         {/* Divider */}
-        <div className="flex items-center gap-3.5 my-12" aria-hidden="true">
+        <div className="flex items-center gap-3.5 my-8 sm:my-12" aria-hidden="true">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-maroon-warm to-transparent" />
           <span className="text-amber opacity-80 text-lg">✦</span>
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-maroon-warm to-transparent" />
         </div>
 
         {/* Main layout: posts + sidebar */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_220px] gap-6 sm:gap-10 items-start">
           <main>
             <Suspense fallback={<PostsSkeleton />}>
               <PostsSection />
             </Suspense>
 
             {/* Quote block */}
-            <blockquote className="border-l-4 border-amber px-6 py-5 my-10 bg-maroon-mid/35 rounded-r-sm">
-              <p className="font-serif italic text-xl leading-[1.7] text-foreground text-balance">
+            <blockquote className="border-l-4 border-amber px-4 sm:px-6 py-4 sm:py-5 my-8 sm:my-10 bg-maroon-mid/35 rounded-r-sm">
+              <p className="font-serif italic text-lg sm:text-xl leading-[1.7] text-foreground text-balance">
                 &ldquo;Fotografi mengajarkan saya satu hal yang berlaku di luar
                 kamera — kita tidak bisa mengulang cahaya yang sama dua
                 kali.&rdquo;
               </p>
-              <div className="font-mono text-[10px] tracking-[2px] text-amber uppercase mt-2.5">
+              <div className="font-mono text-[9px] sm:text-[10px] tracking-[2px] text-amber uppercase mt-2.5">
                 — Catatan Pribadi, 2024
               </div>
             </blockquote>
           </main>
 
+          {/* Sidebar - full width on mobile, sidebar on lg */}
           <Suspense
             fallback={
               <div className="space-y-4">
@@ -130,8 +131,8 @@ export default function HomePage() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 border-t border-border pt-8 text-center">
-          <div className="inline-block bg-film-strip font-mono text-[11px] tracking-[4px] text-film-yellow uppercase px-5 py-1.5 rounded-sm mb-4">
+        <footer className="mt-12 sm:mt-16 border-t border-border pt-6 sm:pt-8 text-center">
+          <div className="inline-block bg-film-strip font-mono text-[9px] sm:text-[11px] tracking-[3px] sm:tracking-[4px] text-film-yellow uppercase px-4 sm:px-5 py-1.5 rounded-sm mb-3 sm:mb-4">
             Kodak · Ruang Cerita · 135mm
           </div>
           <p className="text-xs text-muted-foreground italic">
@@ -139,7 +140,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/admin"
-            className="inline-flex items-center gap-1.5 mt-4 text-[10px] font-mono tracking-[2px] uppercase text-muted-foreground hover:text-amber transition-colors duration-200"
+            className="inline-flex items-center gap-1.5 mt-3 sm:mt-4 text-[9px] sm:text-[10px] font-mono tracking-[2px] uppercase text-muted-foreground hover:text-amber transition-colors duration-200"
           >
             <Settings className="w-3 h-3" />
             Admin

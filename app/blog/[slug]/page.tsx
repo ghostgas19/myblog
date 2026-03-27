@@ -32,19 +32,19 @@ export default async function PostPage({ params }: Props) {
     <div className="min-h-screen bg-background text-foreground">
       <FilmStrip />
 
-      <div className="max-w-2xl mx-auto px-6 pb-20 pt-10">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-12 sm:pb-20 pt-6 sm:pt-10">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-8 text-xs font-mono tracking-widest uppercase text-muted-foreground">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 mb-6 sm:mb-8 text-[9px] sm:text-xs font-mono tracking-widest uppercase text-muted-foreground">
           <Link href="/" className="hover:text-amber transition-colors duration-200 flex items-center gap-1.5">
             <ArrowLeft className="w-3.5 h-3.5" />
             Beranda
           </Link>
           <span>/</span>
-          <span className="text-amber truncate max-w-xs">{post.title}</span>
+          <span className="text-amber truncate max-w-[200px] sm:max-w-xs">{post.title}</span>
         </nav>
 
         {/* Cover */}
-        <div className="w-full h-48 md:h-64 flex items-center justify-center text-7xl bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber rounded-sm mb-8 relative overflow-hidden">
+        <div className="w-full h-40 sm:h-52 md:h-64 flex items-center justify-center text-6xl sm:text-7xl bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber rounded-sm mb-6 sm:mb-8 relative overflow-hidden">
           {post.bannerUrl ? (
             <img
               src={post.bannerUrl}
@@ -63,28 +63,28 @@ export default async function PostPage({ params }: Props) {
         </div>
 
         {/* Article header */}
-        <header className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="font-mono text-[9px] tracking-[2px] uppercase bg-amber text-primary-foreground px-2 py-0.5 rounded-sm flex items-center gap-1">
+        <header className="mb-6 sm:mb-8">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <span className="font-mono text-[8px] sm:text-[9px] tracking-[1.5px] sm:tracking-[2px] uppercase bg-amber text-primary-foreground px-2 py-0.5 rounded-sm flex items-center gap-1">
               <Tag className="w-2.5 h-2.5" />
               {post.category}
             </span>
-            <span className="text-xs text-muted-foreground italic">{formatDate(post.createdAt)}</span>
-            <span className="text-xs text-muted-foreground italic flex items-center gap-1">
+            <span className="text-[10px] sm:text-xs text-muted-foreground italic">{formatDate(post.createdAt)}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground italic flex items-center gap-1">
               <Clock className="w-3 h-3" />
               {post.readingTime} menit baca
             </span>
           </div>
 
-          <h1 className="font-serif text-3xl md:text-4xl font-bold leading-tight text-foreground text-balance [text-shadow:2px_2px_0_theme(colors.maroon-deep)]">
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-foreground text-balance [text-shadow:1px_1px_0_theme(colors.maroon-deep)] sm:[text-shadow:2px_2px_0_theme(colors.maroon-deep)]">
             {post.title}
           </h1>
 
-          <div className="h-px bg-gradient-to-r from-amber via-maroon-warm to-transparent mt-6" />
+          <div className="h-px bg-gradient-to-r from-amber via-maroon-warm to-transparent mt-4 sm:mt-6" />
         </header>
 
         {/* Article body */}
-        <article className="font-sans text-[0.96rem] leading-[1.85] text-cream-dark space-y-5">
+        <article className="font-sans text-[0.9rem] sm:text-[0.96rem] leading-[1.8] sm:leading-[1.85] text-cream-dark space-y-4 sm:space-y-5">
           {paragraphs.map((para, i) => {
             // Bold text rendering: replace **text** with <strong>text</strong>
             const parts = para.split(/\*\*(.*?)\*\*/g)
@@ -105,22 +105,22 @@ export default async function PostPage({ params }: Props) {
         </article>
 
         {/* Footer divider */}
-        <div className="flex items-center gap-3 my-10" aria-hidden="true">
+        <div className="flex items-center gap-3 my-8 sm:my-10" aria-hidden="true">
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-maroon-warm to-transparent" />
           <span className="text-amber opacity-80">✦</span>
           <div className="flex-1 h-px bg-gradient-to-r from-transparent via-maroon-warm to-transparent" />
         </div>
 
         {/* Back link */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
           <Link
             href="/"
-            className="font-mono text-[10px] tracking-[2px] uppercase text-amber-light hover:tracking-[4px] transition-all duration-200 flex items-center gap-1.5"
+            className="font-mono text-[9px] sm:text-[10px] tracking-[2px] uppercase text-amber-light hover:tracking-[4px] transition-all duration-200 flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Kembali ke Beranda
           </Link>
-          <span className="font-mono text-[10px] text-muted-foreground tracking-widest">
+          <span className="font-mono text-[9px] sm:text-[11px] text-muted-foreground tracking-widest">
             ■ {post.slug.slice(0, 6).toUpperCase()}
           </span>
         </div>

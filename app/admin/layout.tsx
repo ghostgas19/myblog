@@ -1,11 +1,31 @@
 import Link from 'next/link'
-import { LayoutDashboard, PenSquare, Home, Film } from 'lucide-react'
+import { LayoutDashboard, PenSquare, Home, Film, Menu, X } from 'lucide-react'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
-      {/* Sidebar */}
-      <aside className="w-56 bg-sidebar border-r border-sidebar-border flex flex-col shrink-0">
+    <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row">
+      {/* Mobile Sidebar Toggle - only visible on mobile */}
+      <div className="md:hidden h-12 bg-sidebar border-b border-sidebar-border flex items-center px-4 shrink-0">
+        <details className="group w-full">
+          <summary className="flex items-center gap-3 cursor-pointer list-none">
+            <Menu className="w-5 h-5 text-amber group-open:hidden" />
+            <X className="w-5 h-5 text-amber hidden group-open:block" />
+            <span className="font-mono text-xs tracking-[2px] uppercase text-sidebar-foreground">
+              Menu
+            </span>
+          </summary>
+          <nav className="absolute left-0 right-0 top-12 bg-sidebar border-b border-sidebar-border p-3 space-y-1 z-50 md:hidden">
+            <NavItem href="/admin" icon={<LayoutDashboard className="w-4 h-4" />} label="Dashboard" />
+            <NavItem href="/admin/new" icon={<PenSquare className="w-4 h-4" />} label="Tulisan Baru" />
+            <div className="border-t border-sidebar-border pt-3 mt-3">
+              <NavItem href="/" icon={<Home className="w-4 h-4" />} label="Lihat Blog" />
+            </div>
+          </nav>
+        </details>
+      </div>
+
+      {/* Sidebar - hidden on mobile, visible on md and up */}
+      <aside className="hidden md:flex w-56 bg-sidebar border-r border-sidebar-border flex-col shrink-0">
         {/* Logo */}
         <div className="p-5 border-b border-sidebar-border">
           <div className="flex items-center gap-2.5 mb-0.5">
@@ -33,8 +53,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="h-12 bg-sidebar border-b border-sidebar-border flex items-center px-6 shrink-0">
+        {/* Top bar - hidden on mobile, visible on md and up */}
+        <header className="hidden md:flex h-12 bg-sidebar border-b border-sidebar-border items-center px-6 shrink-0">
           <div
             className="h-full w-full"
             style={{
