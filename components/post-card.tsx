@@ -1,30 +1,30 @@
-import Link from 'next/link'
-import type { Post } from '@/lib/types'
-import { formatDate } from '@/lib/utils'
+import Link from "next/link";
+import type { Post } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
 
 interface PostCardProps {
-  post: Post
-  index: number
-  featured?: boolean
+  post: Post;
+  index: number;
+  featured?: boolean;
 }
 
 export function PostCard({ post, index, featured = false }: PostCardProps) {
   return (
     <article
-      className={`bg-card border border-border rounded-sm overflow-hidden group hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)] relative flex flex-col ${featured ? 'md:col-span-2' : ''}`}
+      className={`bg-card border border-border rounded-sm overflow-hidden group hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_12px_36px_rgba(0,0,0,0.5)] relative flex flex-col ${featured ? "md:col-span-2" : ""}`}
     >
       {/* Film frame top */}
       <div
         className="h-4 bg-film-strip shrink-0"
         style={{
           backgroundImage:
-            'repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.06) 6px, rgba(255,255,255,0.06) 12px)',
+            "repeating-linear-gradient(to right, transparent 0px, transparent 6px, rgba(255,255,255,0.06) 6px, rgba(255,255,255,0.06) 12px)",
         }}
       />
 
       {/* Cover */}
       <div
-        className={`w-full flex items-center justify-center text-5xl bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber overflow-hidden relative ${featured ? 'h-52' : 'h-40'}`}
+        className={`w-full flex items-center justify-center text-5xl bg-gradient-to-br from-maroon-deep via-maroon-warm to-amber overflow-hidden relative ${featured ? "h-52" : "h-40"}`}
         aria-hidden="true"
       >
         {post.bannerUrl ? (
@@ -34,14 +34,12 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : null}
-        <div className={`relative z-10 flex items-center justify-center w-full h-full ${post.bannerUrl ? 'bg-black/20' : ''}`}>
-          {post.coverEmoji}
-        </div>
+        {post.bannerUrl && <div className="absolute inset-0 bg-black/20" />}
       </div>
 
       {/* Exposure number */}
       <span className="absolute top-6 right-2.5 font-mono text-[11px] text-film-yellow bg-black/60 px-1.5 py-0.5 rounded-sm tracking-wide">
-        ■ {String(index + 1).padStart(2, '0')}
+        ■ {String(index + 1).padStart(2, "0")}
       </span>
 
       {/* Body */}
@@ -56,7 +54,7 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
         </div>
 
         <h2
-          className={`font-serif font-bold text-foreground leading-tight mb-2.5 ${featured ? 'text-2xl' : 'text-lg'}`}
+          className={`font-serif font-bold text-foreground leading-tight mb-2.5 ${featured ? "text-2xl" : "text-lg"}`}
         >
           {post.title}
         </h2>
@@ -79,5 +77,5 @@ export function PostCard({ post, index, featured = false }: PostCardProps) {
         </span>
       </div>
     </article>
-  )
+  );
 }
