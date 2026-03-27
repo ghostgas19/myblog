@@ -98,8 +98,12 @@ function AdminSidebarContent({
   return (
     <>
       {/* Logo */}
-      <div className="p-5 border-b border-sidebar-border">
-        <div className="flex items-center gap-2.5 mb-0.5">
+      <Link 
+        href="/admin" 
+        onClick={onNavigate}
+        className="p-5 border-b border-sidebar-border block hover:bg-sidebar-accent/10 transition-colors group"
+      >
+        <div className="flex items-center gap-2.5 mb-0.5 group-hover:translate-x-0.5 transition-transform">
           <Film className="w-4 h-4 text-amber" />
           <span className="font-serif text-base font-bold text-foreground">
             Ruang <em className="italic text-amber-light">Cerita</em>
@@ -108,7 +112,7 @@ function AdminSidebarContent({
         <span className="font-mono text-[9px] tracking-[3px] uppercase text-muted-foreground">
           Admin Dashboard
         </span>
-      </div>
+      </Link>
 
       {/* Nav */}
       <nav className="flex-1 p-3 space-y-1" aria-label="Admin navigation">
