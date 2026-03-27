@@ -1,7 +1,8 @@
 import { getProfile } from "@/lib/data";
 
 interface BlogSidebarProps {
-  postCount: number
+  postCount: number;
+  initialProfile: any;
 }
 
 const TAGS = ['Refleksi', 'Perjalanan', 'Rekomendasi', 'Kehidupan', 'Kamera', 'Harian', 'Semua']
@@ -24,8 +25,8 @@ function SidebarBlock({ children, title }: { children: React.ReactNode; title: s
   )
 }
 
-export async function BlogSidebar({ postCount }: BlogSidebarProps) {
-  const profile = await getProfile();
+export function BlogSidebar({ postCount, initialProfile }: BlogSidebarProps) {
+  const profile = initialProfile;
   
   return (
     <aside aria-label="Sidebar blog">
