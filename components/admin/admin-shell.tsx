@@ -9,7 +9,9 @@ import {
   Film,
   Menu,
   X,
+  Mail,
 } from "lucide-react";
+
 
 import { cn } from "@/lib/utils";
 
@@ -120,6 +122,13 @@ function AdminSidebarContent({
           label="Tulisan Baru"
           onClick={onNavigate}
         />
+        <NavItem
+          href="/admin/messages"
+          icon={<Mail className="w-4 h-4" />}
+          label="Pesan Masuk"
+          onClick={onNavigate}
+        />
+
       </nav>
 
       {/* Bottom */}

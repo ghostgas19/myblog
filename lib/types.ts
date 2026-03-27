@@ -14,3 +14,10 @@ export interface Post {
   readingTime: number
   createdAt: string
 }
+
+export interface Message {
+  id: string;
+  content: string;
+  sender_name: string;
+  created_at: string;
+}

@@ -37,7 +37,7 @@ export default function HomePage() {
           </p>
         </header>
 
-        {/* Polaroid row decoration */}
+        {/* Polaroid row decoration - Functional Navbar */}
         <div
           className="flex justify-center gap-5 my-9 flex-wrap"
           aria-hidden="true"
@@ -45,24 +45,34 @@ export default function HomePage() {
           {[
             {
               emoji: "☕",
-              label: "kopi pagi",
+              label: "Blog",
+              href: "/",
               bg: "from-amber-700 to-amber-900",
             },
             {
               emoji: "🌿",
-              label: "sore hujan",
+              label: "Profil",
+              href: "/profil",
               bg: "from-maroon-mid to-maroon-deep",
             },
-            { emoji: "📖", label: "buku lama", bg: "from-amber to-maroon-mid" },
+            { 
+              emoji: "📖", 
+              label: "Rekomendasi", 
+              href: "/rekomendasi",
+              bg: "from-amber to-maroon-mid" 
+            },
             {
               emoji: "🎞️",
-              label: "roll film",
+              label: "Kotak Surat",
+              href: "/kotak-surat",
               bg: "from-maroon-deep to-maroon-warm",
             },
-          ].map(({ emoji, label, bg }, i) => (
-            <div
+
+          ].map(({ emoji, label, href, bg }, i) => (
+            <Link
               key={label}
-              className={`bg-white p-2.5 pb-7 shadow-[3px_6px_18px_rgba(0,0,0,0.5)] relative w-28 cursor-pointer hover:scale-105 hover:rotate-0 hover:-translate-y-2 transition-all duration-300 z-10 ${
+              href={href}
+              className={`group bg-white p-2.5 pb-7 shadow-[3px_6px_18px_rgba(0,0,0,0.5)] relative w-28 cursor-pointer hover:scale-110 hover:rotate-0 hover:-translate-y-3 transition-all duration-300 z-10 ${
                 i === 0
                   ? "-rotate-[4deg]"
                   : i === 1
@@ -73,16 +83,16 @@ export default function HomePage() {
               }`}
             >
               {/* tape */}
-              <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-10 h-4 bg-film-yellow/40 border border-film-yellow/30" />
+              <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-10 h-4 bg-film-yellow/40 border border-film-yellow/30 group-hover:bg-film-yellow/60 transition-colors" />
               <div
                 className={`w-full h-[90px] flex items-center justify-center text-3xl bg-gradient-to-br ${bg}`}
               >
                 {emoji}
               </div>
-              <div className="font-mono text-[9px] text-gray-600 text-center mt-1.5 tracking-wide">
+              <div className="font-mono text-[9px] text-gray-600 text-center mt-1.5 tracking-wide group-hover:text-amber transition-colors">
                 {label}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

@@ -1,4 +1,4 @@
-import type { Post } from "./types";
+import type { Post, Message } from "./types";
 import { supabase } from "./supabase-server";
 
 // ---- Default seed data (dipakai saat pertama kali DB masih kosong) ----
@@ -427,6 +427,63 @@ export async function deletePost(id: string): Promise<boolean> {
 
   if (error) {
     console.error("Supabase deletePost error:", error);
+    return false;
+  }
+
+  return (count ?? 0) > 0;
+}
+
+// ---- Messages API ----
+
+function mapRowToMessage(row: any): Message {
+  return {
+    id: row.id,
+    content: row.content,
+    sender_name: row.sender_name || "Anonim",
+    created_at: row.created_at,
+  };
+}
+
+export async function getMessages(): Promise<Message[]> {
+  const { data, error } = await supabase
+    .from("messages")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase getMessages error:", error);
+    return [];
+  }
+
+  return (data ?? []).map(mapRowToMessage);
+}
+
+export async function createMessage(content: string, senderName?: string): Promise<Message | null> {
+  const { data, error } = await supabase
+    .from("messages")
+    .insert({
+      content,
+      sender_name: senderName || "Anonim",
+    })
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("Supabase createMessage error:", error);
+    return null;
+  }
+
+  return mapRowToMessage(data);
+}
+
+export async function deleteMessage(id: string): Promise<boolean> {
+  const { error, count } = await supabase
+    .from("messages")
+    .delete({ count: "exact" })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Supabase deleteMessage error:", error);
     return false;
   }
 
